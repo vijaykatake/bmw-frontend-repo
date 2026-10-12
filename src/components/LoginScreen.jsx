@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightToBracket, faBan, faEye, faEyeSlash, faLock, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { useTheme } from '../theme/ThemeContext.jsx'
 import { BMW_VERSION } from '../config/version.js'
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 export default function LoginScreen({ onLogin }) {
   const { activeTheme } = useTheme()
   const [loginId, setLoginId] = useState(() => sessionStorage.getItem('bmw.loginId') ?? 'Administrator')
@@ -18,7 +18,8 @@ export default function LoginScreen({ onLogin }) {
     setMessage('')
     setSubmitting(true)
     try {
-      const response = await fetch('/api/auth/login', {
+        //const response = await fetch('/api/auth/login', {
+        const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ loginId, password }),
