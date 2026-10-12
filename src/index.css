@@ -30,6 +30,10 @@
   background: var(--app-header-hover-bg);
 }
 
+.sidebar-pin:hover {
+  --pin-bg: var(--app-primary-hover);
+}
+
 .sidebar-submenu-popup {
   animation: sidebar-submenu-enter 140ms ease-out;
   max-height: calc(100vh - 1rem);

@@ -32,7 +32,7 @@ export default function AppLayout({ user, layout, onLogout }) {
       <Sidebar settings={layout.settings} menus={layout.menus} currentPath={path} open={sidebarOpen} collapsed={sidebarCollapsed} onToggleCollapse={() => setSidebarCollapsed((value) => !value)} onClose={() => setSidebarOpen(false)} onNavigate={navigate} />
       <div className={`min-h-screen transition-[padding] duration-300 ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-72'}`}>
         <TopBar settings={layout.settings} profile={layout.profile} onMenuToggle={() => setSidebarOpen(true)} onNavigate={navigate} onLogout={onLogout} />
-        <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+        <main className={`mx-auto ${sidebarCollapsed ? 'max-w-none p-3 sm:p-4 lg:p-5' : 'max-w-7xl px-1 py-4 sm:px-1.5 sm:py-6 lg:px-2 lg:py-8'}`}>
           <Breadcrumbs menu={currentMenu} />
           {content}
           <p className="mt-8 text-xs text-slate-500">Signed in as {user.userName}</p>
