@@ -79,7 +79,7 @@ export default function Ward() {
     const transactionValue = form.wardId ? 2 : 1
     try {
       const response = await fetch(`${API_BASE_URL}/api/master/ward/transaction`, {
-        method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+          method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactionValue, wardId: form.wardId, stationId: Number(form.stationId), wardName: form.wardName.trim(), wardDescription: form.wardDescription.trim(), isWardActive: form.isWardActive }),
       })
       const result = await response.json()
@@ -97,7 +97,7 @@ export default function Ward() {
     setConfirmRecord(null)
     try {
       const response = await fetch(`${API_BASE_URL}/api/master/ward/transaction`, {
-        method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+          method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactionValue: 3, wardId: record.wardId, stationId: 0, wardName: record.wardName, wardDescription: record.wardDescription, isWardActive: false }),
       })
       const result = await response.json()
