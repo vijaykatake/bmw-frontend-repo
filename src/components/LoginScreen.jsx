@@ -20,6 +20,10 @@ export default function LoginScreen({ onLogin }) {
   async function submit(event) {
     event.preventDefault()
     setMessage('')
+    if (!loginId.trim() || !password) {
+      setMessage('Login ID and password are required.')
+      return
+    }
     setSubmitting(true)
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
