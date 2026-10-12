@@ -3,7 +3,7 @@ import LoginScreen from './components/LoginScreen.jsx'
 import { useTheme } from './theme/ThemeContext.jsx'
 import AppLayout from './components/layout/AppLayout.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 function App() {
   const { themes, loading, error, setActiveThemeById } = useTheme()
   const [user, setUser] = useState(null)
@@ -12,7 +12,8 @@ function App() {
   const [layoutError, setLayoutError] = useState('')
 
   useEffect(() => {
-    fetch('/api/auth/session', { credentials: 'same-origin' })
+      //fetch('/api/auth/session', { credentials: 'same-origin' })
+      fetch(`${API_BASE_URL}/api/auth/session`, { credentials: 'include' })
       .then((response) => response.ok ? response.json() : null)
       .then((result) => { if (result?.user) setUser(result.user) })
       .catch(() => {})
@@ -22,7 +23,8 @@ function App() {
   useEffect(() => {
     if (!user) return undefined
     let cancelled = false
-    fetch('/api/layout', { credentials: 'same-origin' })
+      //fetch('/api/layout', { credentials: 'same-origin' })
+      fetch(`${API_BASE_URL}/api/layout`, { credentials: 'include' })
       .then((response) => {
         if (!response.ok) throw new Error(response.status === 401 ? 'Your session has expired.' : 'Unable to load the application layout.')
         return response.json()
@@ -39,8 +41,9 @@ function App() {
   }, [layout, themes, setActiveThemeById])
 
   async function logout() {
-    try {
-      const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
+      try {
+       const response = await fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' })
+      //const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
       if (!response.ok) throw new Error('Unable to sign out securely. Please try again.')
       setLayout(null)
       setUser(null)
