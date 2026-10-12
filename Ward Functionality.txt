@@ -1,0 +1,472 @@
+# BMW V01 — Implement Ward Master Functionality Only
+
+## 1. Objective and Strict Scope
+
+Implement the complete Ward Master functionality in the existing BMW V01 Biomedical Waste Management project according to the requirements below and the previously established project-wide Master Screen Development Standards.
+
+**Work exclusively on Ward Master and the minimum supporting code strictly required for its functionality. The rest of the project is already stable. Do not modify unrelated functionality, refactor unrelated files, remove existing features, change the global UI, or alter the existing database architecture. Do not skip any requirement.**
+
+Before making changes, inspect the existing implementation, including:
+
+- Ward Master frontend screen and its current components.
+- Existing Ward API/controller and database integration.
+- `[BMWMaster].[CRUID_BMWMaster_Ward]` stored procedure.
+- `[BMWMaster].[Ward]` and `[BMWMaster].[Station]` table definitions.
+- `[BMWArchitecture].[TransactionStatusCode]` and `[BMWArchitecture].[ExecuteMessage]`.
+- Existing transaction response handling, notification components, error logging, authentication, theme handling, and reusable Master Screen components.
+
+Reuse the established architecture. Do not create duplicate APIs, controllers, notification systems, database access layers, or form components if suitable implementations already exist.
+
+Do not modify the database schema or the protected architecture objects. I will apply any database changes manually if they are explicitly required and approved.
+
+If an essential detail cannot be verified from the existing code or database scripts, ask me before making assumptions. Otherwise, proceed with the implementation.
+
+---
+
+## 2. Database Structure and Relationships
+
+### 2.1 Ward Table
+
+The Ward Master uses the following table:
+
+```sql
+SELECT
+    [WardId],
+    [StationId],
+    [WardName],
+    [WardDescription],
+    [IsWardActive],
+    [IsWardDeleted],
+    [AddedBy],
+    [AddedDate],
+    [UpdatedBy],
+    [UpdatedDate]
+FROM [BMWMaster].[Ward];
+```
+
+The following rules are mandatory:
+
+- `WardId` is the primary key and an auto-increment/identity column.
+- Use `WardId` to identify records for Update and Delete operations and for selecting the correct record in the grid.
+- Do not send `WardId` as an insert value. The database generates it automatically.
+- `StationId` is a foreign key referencing `[BMWMaster].[Station]`.
+- `WardName` maps to the database column `WardName`.
+- `WardDescription` maps to the database column `WardDescription`.
+- `IsWardActive` determines whether the Ward is active.
+- `IsWardDeleted` must not appear as a visible data-grid column or form field.
+- `AddedBy` and `UpdatedBy` must contain the actual logged-in user's `UserId`, according to the existing authentication architecture.
+- `AddedDate` uses the database default `GETDATE()`. Do not send it from the frontend.
+- `UpdatedDate` is set by the stored procedure using `GETDATE()`. Do not send it from the frontend.
+
+Inspect the actual table definition and stored procedure before implementation. Do not change the schema or invent additional columns.
+
+### 2.2 Station Table
+
+The Station table is static master data:
+
+`[BMWMaster].[Station]`
+
+There are currently two Station records. Station maintenance is outside this task. Do not create a Station Master screen, add Station CRUD functionality, or modify Station records.
+
+The Ward Master must use the existing `StationId` relationship.
+
+Display `StationName` in the Ward data grid, obtained through the stored procedure. The frontend must not implement its own database lookup or hardcode Station names.
+
+---
+
+## 3. Stored Procedure Integration
+
+Use the existing stored procedure:
+
+`[BMWMaster].[CRUID_BMWMaster_Ward]`
+
+The following transaction values are explicitly required.
+
+### 3.1 Retrieve Ward Data — `@BMWTransValue = 5`
+
+Use the existing stored procedure to retrieve the Ward records for the data grid.
+
+Conceptually:
+
+```sql
+EXEC [BMWMaster].[CRUID_BMWMaster_Ward]
+    @BMWTransValue = 5;
+```
+
+Use the actual parameter declarations and required parameters defined by the existing procedure. The above is an illustration of the requested transaction value, not permission to omit other required parameters.
+
+The stored procedure must provide the data needed by the grid, including the Station display name and audit display values.
+
+Do not retrieve `Ward` records directly through frontend SQL or bypass the existing stored procedure.
+
+### 3.2 Retrieve Station Dropdown Data — `@BMWTransValue = 6`
+
+Use the same stored procedure to retrieve the Station dropdown data.
+
+Conceptually:
+
+```sql
+EXEC [BMWMaster].[CRUID_BMWMaster_Ward]
+    @BMWTransValue = 6;
+```
+
+Use the actual procedure signature and existing parameter conventions.
+
+The dropdown must contain:
+
+- Value: `StationId`
+- Display text: `StationName`
+
+Add this frontend placeholder as the first option:
+
+- Value: `0`
+- Text: `Select Station`
+
+This placeholder is for selection and validation only. Do not treat `0` as a valid Station unless the actual database rules explicitly permit it.
+
+The dropdown must be populated from the stored procedure result, not from hardcoded Station values.
+
+### 3.3 Add, Update, Delete and Duplicate Detection
+
+Use the existing stored procedure's established transaction values and parameter conventions for Add, Update, Delete, and duplicate detection.
+
+Before implementing these operations, inspect the actual procedure body and its current behavior.
+
+- Use the generated `WardId` for updates and deletes.
+- Use the existing duplicate-detection mechanism for `WardName` or other applicable uniqueness rules.
+- Follow the existing `[BMWArchitecture].[TransactionStatusCode]` and `[BMWArchitecture].[ExecuteMessage]` integration.
+- Do not invent transaction parameter values, parameter names, output fields, or response formats.
+- Do not rewrite the stored procedure or alter database objects unnecessarily.
+
+If a required operation is missing from the existing procedure, report the specific gap and ask for clarification before making database changes.
+
+---
+
+## 4. Ward Data Grid
+
+Implement the Ward grid using the existing reusable Master Screen grid architecture.
+
+The grid must respect the active application theme and support the project's standard search, record-count/page-size selector, and export functionality.
+
+Use the following visible columns and display rules:
+
+| Display order | Data source | Grid column title | Display requirement |
+|---|---|---|---|
+| 1 | `StationName` | Station | Display the Station name as readable text. |
+| 2 | `WardName` | Ward | Display the Ward name. |
+| 3 | `WardDescription` | Description | Display the Ward description. |
+| 4 | `IsWardActive` | Active | Display a green checkmark when the value is `1` and a gray checkmark when the value is `0`. |
+| 5 | Existing `AddedBy` display mapping | AUser | Display the added-by user's readable text using the existing data mapping. |
+| 6 | Existing `AddedDate` display mapping | ADate | Display the date in the required format. |
+| 7 | Existing `UpdatedBy` display mapping | UUser | Display the updated-by user's readable text using the existing data mapping. |
+| 8 | Existing `UpdatedDate` display mapping | UDate | Display the date in the required format. |
+| 9 | Row actions | Action | Show Edit and Delete icons only. |
+
+### Important Grid Rules
+
+**WardId**
+
+- Required internally for Edit, Update, Delete, and record selection.
+- Must not be displayed as a grid column.
+- Do not discard it from the row data.
+
+**Station**
+
+- Display `StationName`, not the numeric `StationId`.
+- Use the column title `Station`.
+
+**Ward**
+
+- Display `WardName`.
+- Use the column title `Ward`.
+
+**Description**
+
+- Display `WardDescription`.
+- Use the column title `Description`.
+
+**Active**
+
+- Do not use a textual `true/false`, `1/0`, or Active/Inactive label in place of the requested checkmark.
+- Use a green checkmark icon for `IsWardActive = 1`.
+- Use a gray checkmark icon for `IsWardActive = 0`.
+- Provide appropriate accessible labels or tooltips.
+- Do not make this indicator editable unless existing requirements explicitly support that behavior.
+
+**IsWardDeleted**
+
+- Never show this field as a visible grid column or form input.
+- Do not replace the requested Action column with the deleted-status field.
+- The Action column must contain Edit and Delete icons only.
+
+**Audit Columns**
+
+- Display `AUser`, `ADate`, `UUser`, and `UDate` as specified.
+- Determine how the existing procedure maps `AddedBy`/`UpdatedBy` to readable usernames. Do not assume that a particular user-name column exists.
+- Format both dates consistently, for example:
+
+  `11-Sep-26 11:11 AM`
+
+- Handle null `UpdatedBy` or `UpdatedDate` values gracefully, without displaying invalid dates.
+
+**Action Column**
+
+- Display a recognizable Edit icon and a Delete icon.
+- Do not display the words Edit or Delete beside the icons.
+- Use appropriate accessible labels and tooltips.
+- Keep the actions usable on smaller screens and under every existing theme.
+
+**Exports**
+
+Preserve the project-wide grid export requirements:
+
+- PDF
+- Excel
+- CSV
+- Copy to clipboard
+
+Use the existing `Bedcrum02` breadcrumb value as the filename basis for PDF and Excel. The PDF must include the breadcrumb-based title, generation date, and page numbers.
+
+Do not include hidden technical fields such as `WardId` or `IsWardDeleted` in the exported columns unless the established export requirements explicitly require them. Keep the export aligned with the user-visible data grid.
+
+---
+
+## 5. Add and Edit Ward Modal
+
+Use the same reusable modal for both Add and Edit operations.
+
+### 5.1 Add Mode
+
+When the user clicks the top-right Add button:
+
+- Open the modal.
+- Set the title to `Add New`.
+- Show the required inputs described below.
+- Reset the form to appropriate initial values.
+- Ensure the Station dropdown initially displays `Select Station`.
+- Validate the form before submitting.
+- Do not send `WardId`, `AddedDate`, or `UpdatedDate` from the frontend.
+
+### 5.2 Edit Mode
+
+When the user clicks a row's Edit icon:
+
+- Open the same modal in Edit mode.
+- Use a title following the established format, for example:
+
+  `Edit Ward : Ward 01`
+
+- Load the selected row's actual values.
+- Preserve the selected `WardId` internally.
+- Select the correct Station using the row's `StationId`.
+- Populate `WardName` and `WardDescription`.
+- Apply the same field validation used by Add mode.
+- Submit the correct primary key and updated values through the existing API and stored procedure.
+
+Do not clear the form or change the selected record when an operation fails.
+
+---
+
+## 6. Required Form Fields and Validation
+
+The modal must contain exactly the following business inputs unless the existing architecture requires a non-visible technical field.
+
+### Field 1: Station
+
+- Label: `Station`
+- Control: Dropdown/select.
+- Data source: `[BMWMaster].[CRUID_BMWMaster_Ward]` with `@BMWTransValue = 6`.
+- Option value: `StationId`.
+- Option display: `StationName`.
+- First option: value `0`, text `Select Station`.
+- Validation: A valid Station must be selected; value `0` is invalid.
+- Add and Update must send the selected `StationId` to the stored procedure.
+
+Do not hardcode the two Station records or assume their IDs.
+
+### Field 2: Ward
+
+- Label: `Ward`
+- Control: Text input.
+- Database column: `WardName`.
+- Validation: Minimum 3 characters.
+- Trim leading and trailing whitespace for validation.
+- Follow the actual database column length and existing validation conventions.
+- Do not invent a maximum length without checking the database schema.
+- Submit the correct value using the established API parameter mapping.
+
+### Field 3: Description
+
+- Label: `Description`
+- Control: Text input, multiline if consistent with the existing UI.
+- Database column: `WardDescription`.
+- Validation: Minimum 15 characters.
+- Trim leading and trailing whitespace for validation.
+- Respect the actual database column length.
+- Do not invent a maximum length without checking the schema.
+- Submit the correct value using the established API parameter mapping.
+
+### Validation Behavior
+
+- Reuse the existing React form-validation library or shared form infrastructure if suitable.
+- Do not introduce jQuery validation.
+- Display field-specific validation messages near the corresponding controls.
+- Prevent submission while required values are invalid.
+- Prevent accidental duplicate submissions during an in-progress request.
+- Keep the modal open when validation or the API operation fails.
+- Do not use browser alert boxes for normal validation.
+- Use the established professional notification system where appropriate.
+
+---
+
+## 7. Transaction Message Handling
+
+Apply the previously established project-wide transaction-message standard without duplicating or replacing the existing notification system.
+
+The relevant `ResultID` behavior is:
+
+| ResultID | Meaning | Ward Master behavior |
+|---|---|---|
+| 201 | Exist | Show a red notification for an existing record. Do not refresh the grid or change the screen. |
+| 202 | Add | Show a green success notification and refresh the grid. |
+| 203 | Failure | Ignore for the current implementation. |
+| 204 | Update | Show a green success notification, refresh the grid, and keep the updated Ward selected or positioned appropriately. |
+| 205 | Delete | Show a red deletion notification and refresh the grid. |
+| 206 | Error | Show the standard red error interface with Copy and Email controls. Preserve the current screen state. |
+| 207 | Maintenance | Show the standard maintenance notification and log the user out after 10 seconds. |
+
+For normal transaction notifications:
+
+- Use the established top-right notification location.
+- Use professional icons.
+- Automatically dismiss after 5 seconds with a smooth fade-out.
+- Respect the active theme.
+
+Do not implement duplicate notification infrastructure.
+
+For `ResultID = 206`, reuse the existing centralized exception logging architecture. If the controller throws an exception, log the applicable details in `[BMWLog].[ApiLog]` using the actual existing table schema and logging conventions.
+
+The logical error response is:
+
+- `ResultID = 206`
+- `TransMessageId = 0`
+- `TransMessage =` C# exception message
+- `TransControl = N/A`
+
+Follow the actual existing JSON serialization and response contract. Do not invent a new response structure.
+
+The Email button is UI-only at this stage. Prepare or reuse the appropriate controller endpoint structure for future email functionality, but do not implement actual email sending.
+
+---
+
+## 8. Add and Update Audit Fields
+
+Use the existing authenticated-user context.
+
+- `AddedBy`: Actual logged-in user's `UserId`, handled according to the stored procedure's existing insert convention.
+- `UpdatedBy`: Actual logged-in user's `UserId`, handled according to the stored procedure's existing update convention.
+- `AddedDate`: Do not send from the frontend; rely on the database default `GETDATE()`.
+- `UpdatedDate`: Do not send from the frontend; the stored procedure sets `GETDATE()`.
+
+Inspect how the existing application obtains the authenticated user's `UserId` and how the stored procedure expects audit parameters.
+
+Do not use a hardcoded user ID, the display name in place of `UserId`, or values supplied by the browser as an untrusted identity.
+
+---
+
+## 9. Preserve Existing Application Functionality
+
+The following are non-negotiable:
+
+1. Work only on Ward Master and directly required supporting code.
+2. Preserve the existing authentication and authorization behavior.
+3. Preserve the current routing, sidebar, topbar, breadcrumbs, themes, and global layout.
+4. Preserve existing reusable components and conventions whenever suitable.
+5. Do not modify `[BMWArchitecture].[TransactionStatusCode]` or `[BMWArchitecture].[ExecuteMessage]`.
+6. Do not create or modify the Station Master.
+7. Do not alter database schema or run database scripts.
+8. Do not introduce inline SQL CRUD in controllers.
+9. Do not hardcode Station names, Station IDs, Ward IDs, user IDs, or audit dates.
+10. Do not change unrelated controllers, APIs, screens, or styles.
+11. Do not skip any listed grid column, form field, validation rule, transaction behavior, or export requirement.
+12. Do not claim successful testing unless the relevant tests were actually executed.
+
+Before editing, review the existing Git changes and preserve any unrelated user modifications. Avoid overwriting existing work.
+
+---
+
+## 10. Verification Checklist
+
+After implementation, verify the following where the existing environment permits:
+
+### Data Retrieval
+- Ward data loads through `@BMWTransValue = 5`.
+- Station dropdown loads through `@BMWTransValue = 6`.
+- Station names are displayed correctly.
+- `WardId` is retained internally but never displayed.
+- `IsWardDeleted` is not displayed.
+- All requested grid columns are present with the correct headings.
+- Active/inactive checkmark colors are correct.
+- Audit usernames and dates display correctly.
+
+### Add
+- The modal title is `Add New`.
+- Station, Ward, and Description are validated.
+- Ward requires at least 3 characters.
+- Description requires at least 15 characters.
+- A valid Station must be selected.
+- The generated `WardId` is not sent as an insert value.
+- Audit fields are handled according to the database architecture.
+- A successful Add produces `ResultID = 202` behavior and refreshes the grid.
+
+### Duplicate Detection
+- Duplicate detection follows the actual stored procedure implementation.
+- `ResultID = 201` displays a red notification without refreshing or altering the screen.
+
+### Edit
+- The correct record is loaded using `WardId`.
+- The correct Station is selected.
+- The modal title includes the selected Ward name.
+- Successful Update produces `ResultID = 204` behavior.
+- The grid refreshes and the updated record remains selected or appropriately positioned.
+
+### Delete
+- The confirmation dialog displays the selected Ward's actual name.
+- No is the default keyboard focus and safe action.
+- Selecting No does not call the delete API.
+- Selecting Yes calls the correct stored procedure-backed API.
+- Successful deletion produces `ResultID = 205` behavior and refreshes the grid.
+
+### Error Handling and Exports
+- Controller exceptions follow the established logging and `ResultID = 206` response architecture.
+- Copy works for the displayed error message.
+- Email is present but does not send email.
+- Maintenance behavior remains consistent with `ResultID = 207`.
+- PDF, Excel, CSV, and Copy exports work with the expected data and filenames.
+- PDF title, generation date, and page numbers are present.
+- The screen remains usable under the existing themes.
+
+### Final Report
+
+After implementation, provide a concise report containing:
+
+- Files changed and why.
+- APIs and stored-procedure operations reused.
+- Any assumptions avoided or clarifications required.
+- Build/test results, distinguishing executed tests from unverified behavior.
+- Any requirements blocked by missing database definitions or unavailable infrastructure.
+
+**Implement Ward Master only. Preserve everything else exactly as it currently works.**
+**Correction to the Ward Master requirements:**
+
+The existing stored procedure `[BMWMaster].[CRUID_BMWMaster_Ward]` already returns `AddedBy` and `UpdatedBy` as user names directly from the database.
+
+Therefore:
+
+1. Display `AddedBy` under the grid column heading `AUser`.
+2. Display `UpdatedBy` under the grid column heading `UUser`.
+3. Bind both columns directly to the values returned by the stored procedure.
+4. Do not perform any additional user lookup, join, API call, ID-to-name conversion, or frontend mapping for these fields.
+5. Do not modify the stored procedure or database schema for this purpose.
+
+All other Ward Master requirements and project-wide development standards remain unchanged. Make only the changes required for Ward Master, preserving all existing stable functionality.
