@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faClipboard, faDownload, faEdit, faEnvelope, faFileExcel, faFilePdf, faPlus, faSearch, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { API_BASE_URL } from '../../config/api.js'
 
 const initialForm = { wardId: null, stationId: '0', wardName: '', wardDescription: '', isWardActive: true }
 
@@ -23,7 +24,7 @@ export default function Ward() {
     setLoading(true)
     setError('')
     try {
-      const response = await fetch('/api/master/ward', { credentials: 'same-origin' })
+      const response = await fetch(`${API_BASE_URL}/api/master/ward`, { credentials: 'include' })
       const result = await response.json()
       if (!response.ok) throw new Error(result?.transMessage || result?.message || 'Unable to load Ward data.')
       setRecords(result.records ?? [])
@@ -77,7 +78,7 @@ export default function Ward() {
     setSaving(true)
     const transactionValue = form.wardId ? 2 : 1
     try {
-      const response = await fetch('/api/master/ward/transaction', {
+      const response = await fetch(`${API_BASE_URL}/api/master/ward/transaction`, {
         method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactionValue, wardId: form.wardId, stationId: Number(form.stationId), wardName: form.wardName.trim(), wardDescription: form.wardDescription.trim(), isWardActive: form.isWardActive }),
       })
@@ -95,7 +96,7 @@ export default function Ward() {
     const record = confirmRecord
     setConfirmRecord(null)
     try {
-      const response = await fetch('/api/master/ward/transaction', {
+      const response = await fetch(`${API_BASE_URL}/api/master/ward/transaction`, {
         method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transactionValue: 3, wardId: record.wardId, stationId: 0, wardName: record.wardName, wardDescription: record.wardDescription, isWardActive: false }),
       })
@@ -124,7 +125,7 @@ export default function Ward() {
     }
     if (resultId === 207) {
       setNotification({ type: 'danger', message: result.TransMessage })
-      window.setTimeout(() => fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).then(() => window.location.reload()), 10000)
+      window.setTimeout(() => fetch(`${API_BASE_URL}/api/auth/logout`, { method: 'POST', credentials: 'include' }).then(() => window.location.reload()), 10000)
       return
     }
     setNotification({ type: 'success', message: result.TransMessage || successMessage })
@@ -190,7 +191,7 @@ function ConfirmDialog({ record, onNo, onYes }) {
 
 function ErrorDialog({ message, onClose }) {
   async function copy() { await navigator.clipboard?.writeText(message) }
-  async function prepareEmail() { await fetch('/api/master/ward/email-error', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) }) }
+  async function prepareEmail() { await fetch(`${API_BASE_URL}/api/master/ward/email-error`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) }) }
   return <div className="fixed inset-0 z-[67] flex items-center justify-center p-4" style={{ background: 'var(--app-overlay-bg)' }}><div role="alertdialog" aria-modal="true" className="w-full max-w-lg rounded-2xl border p-5 shadow-2xl" style={{ background: 'var(--app-content-bg)', color: 'var(--app-text)', borderColor: '#b91c1c' }}><h3 className="text-lg font-bold" style={{ color: '#b91c1c' }}>Ward operation error</h3><p className="mt-3 break-words text-sm">{message}</p><div className="mt-5 flex justify-end gap-2"><button type="button" className="flex items-center gap-2 rounded-lg border px-4 py-2" style={{ borderColor: 'var(--app-border)' }} onClick={copy}><FontAwesomeIcon icon={faClipboard} />Copy</button><button type="button" className="flex items-center gap-2 rounded-lg border px-4 py-2" style={{ borderColor: 'var(--app-border)' }} onClick={prepareEmail}><FontAwesomeIcon icon={faEnvelope} />Email</button><button type="button" className="rounded-lg px-4 py-2" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }} onClick={onClose}>Close</button></div></div></div>
 }
 

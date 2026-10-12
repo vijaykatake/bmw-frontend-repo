@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { getPreferenceConsent } from '../components/CookieConsent.jsx'
+import { API_BASE_URL } from '../config/api.js'
 
 const ThemeContext = createContext(null)
 
@@ -27,7 +28,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false
-    fetch('/api/themes')
+    fetch(`${API_BASE_URL}/api/themes`)
       .then((response) => {
         if (!response.ok) throw new Error('Unable to load the BMW theme catalog.')
         return response.json()
@@ -90,9 +91,9 @@ export function ThemeProvider({ children }) {
     if (!selectedTheme) throw new Error('The selected theme is not available.')
 
     try {
-      const response = await fetch('/api/themes/current', {
+      const response = await fetch(`${API_BASE_URL}/api/themes/current`, {
         method: 'PUT',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ themeId }),
       })
