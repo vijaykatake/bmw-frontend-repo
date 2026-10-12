@@ -4,10 +4,14 @@ import { faArrowRightToBracket, faBan, faEye, faEyeSlash, faLock, faTriangleExcl
 import { useTheme } from '../theme/ThemeContext.jsx'
 import { BMW_VERSION } from '../config/version.js'
 import { API_BASE_URL } from '../config/api.js'
+
+const developmentLoginId = import.meta.env.DEV ? import.meta.env.VITE_DEV_LOGIN_ID ?? '' : ''
+const developmentPassword = import.meta.env.DEV ? import.meta.env.VITE_DEV_LOGIN_PASSWORD ?? '' : ''
+
 export default function LoginScreen({ onLogin }) {
   const { activeTheme } = useTheme()
-   const [loginId, setLoginId] = useState(() => sessionStorage.getItem('bmw.loginId') ?? '')
-   const [password, setPassword] = useState('')
+   const [loginId, setLoginId] = useState(() => sessionStorage.getItem('bmw.loginId') ?? developmentLoginId)
+   const [password, setPassword] = useState(developmentPassword)
   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -35,8 +39,8 @@ export default function LoginScreen({ onLogin }) {
   }
 
   function cancel() {
-     setLoginId('')
-     setPassword('')
+     setLoginId(developmentLoginId)
+     setPassword(developmentPassword)
     setShowPassword(false)
     setMessage('')
     setForgotMessage('')
@@ -73,7 +77,7 @@ export default function LoginScreen({ onLogin }) {
         <form className="space-y-5" onSubmit={submit}>
           <label className="block text-sm font-medium">
             Login ID Or Email
-            <input className="mt-2 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2" style={{ background: 'var(--app-input-bg)', borderColor: 'var(--app-input-border)', '--tw-ring-color': 'var(--app-focus-ring)' }} value={loginId} onChange={(event) => { setLoginId(event.target.value); sessionStorage.setItem('bmw.loginId', event.target.value) }} required autoComplete="username" />
+            <input className="mt-2 w-full rounded-lg border px-3 py-2.5 outline-none focus:ring-2" style={{ background: 'var(--app-input-bg)', borderColor: 'var(--app-input-border)', '--tw-ring-color': 'var(--app-focus-ring)' }} value={loginId} onChange={(event) => { setLoginId(event.target.value); sessionStorage.setItem('bmw.loginId', event.target.value) }} required autoComplete="username"  />
           </label>
           <label className="block text-sm font-medium">
             Password

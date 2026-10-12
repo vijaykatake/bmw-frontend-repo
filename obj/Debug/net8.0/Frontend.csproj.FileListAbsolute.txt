@@ -9,3 +9,4 @@ D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.dll
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\refint\Frontend.dll
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.pdb
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\ref\Frontend.dll
+D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.sourcelink.json

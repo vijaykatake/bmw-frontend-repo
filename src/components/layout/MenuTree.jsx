@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBed, faBox, faBoxOpen, faCalendarAlt, faCalendarCheck, faCalendarDay, faChartBar,
   faChevronDown, faChevronRight, faClipboardCheck, faClinicMedical, faCog, faCogs, faDesktop,
-  faDolly, faDollyFlatbed, faDumpster, faFileInvoiceDollar, faHourglassHalf, faHospitalUser, faPalette,
+  faDolly, faDollyFlatbed, faDumpster, faFileInvoiceDollar, faHourglassHalf, faHospitalUser, faLifeRing, faPalette,
   faQrcode, faReceipt, faRecycle, faServer, faShoppingBag, faSlidersH, faTools, faTrashAlt,
   faUserCheck, faUserShield, faWarehouse,
 } from '@fortawesome/free-solid-svg-icons'
@@ -15,7 +15,7 @@ const icons = {
   'fa-chart-bar': faChartBar, 'fa-clipboard-check': faClipboardCheck, 'fa-clinic-medical': faClinicMedical,
   'fa-cog': faCog, 'fa-cogs': faCogs, 'fa-desktop': faDesktop, 'fa-dolly': faDolly,
   'fa-dolly-flatbed': faDollyFlatbed, 'fa-dumpster': faDumpster, 'fa-file-invoice-dollar': faFileInvoiceDollar,
-  'fa-hourglass-half': faHourglassHalf, 'fa-hospital-user': faHospitalUser, 'fa-palette': faPalette,
+  'fa-hourglass-half': faHourglassHalf, 'fa-hospital-user': faHospitalUser, 'fa-life-ring': faLifeRing, 'fa-palette': faPalette,
   'fa-qrcode': faQrcode, 'fa-receipt': faReceipt, 'fa-recycle': faRecycle, 'fa-server': faServer,
   'fa-shopping-bag': faShoppingBag, 'fa-sliders-h': faSlidersH, 'fa-tools': faTools,
   'fa-trash-alt': faTrashAlt, 'fa-user-check': faUserCheck, 'fa-user-shield': faUserShield,
