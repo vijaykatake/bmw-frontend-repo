@@ -82,4 +82,38 @@ function whatsappPattern(value) { return /^(?:\+91)?[6-9]\d{9}$/.test(value.trim
 function Field({ label, required, error, hint, children }) { return <label className="relative mb-4 block pt-2 text-sm font-medium"><span className="pointer-events-none absolute left-3 top-0 z-10 px-1 text-sm font-semibold" style={{ background: 'var(--app-page-bg)', color: 'var(--app-primary)' }}>{label}{required && <span className="ml-1" style={{ color: '#b91c1c' }}>*</span>}</span>{children}<span className={`mt-1 block text-sm font-semibold ${hint ? 'text-right' : 'text-left'}`} style={{ color: hint ? 'var(--app-primary)' : '#b91c1c' }}>{error || ''}</span></label> }
 function SecretInput({ value, visible, onToggle, onBlur, onChange, placeholder, label }) { return <span className="relative block"><input type={visible ? 'text' : 'password'} value={value} autoComplete="new-password" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" placeholder={placeholder} aria-label={label} onBlur={onBlur} onChange={(event) => onChange(event.target.value)} className="h-11 w-full rounded-lg border px-3 pr-11" style={inputStyle} /><button type="button" aria-label={visible ? `Hide ${label}` : `Show ${label}`} title={visible ? `Hide ${label}` : `Show ${label}`} onClick={onToggle} className="absolute inset-y-0 right-0 flex w-11 items-center justify-center" style={{ color: 'var(--app-muted-text)' }}><FontAwesomeIcon icon={visible ? faEyeSlash : faEye} /></button></span> }
 function AuditCapsule({ icon, label, value }) { return <span className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm shadow-sm" style={{ background: 'color-mix(in srgb, var(--app-primary) 10%, var(--app-content-bg))', color: 'var(--app-text)', borderColor: 'color-mix(in srgb, var(--app-primary) 45%, var(--app-border))' }}><FontAwesomeIcon icon={icon} style={{ color: 'var(--app-primary)' }} /><span className="font-bold" style={{ color: 'var(--app-primary)' }}>{label}:</span><span className="font-normal" style={{ color: 'var(--app-text)' }}>{value || '-'}</span></span> }
-export function DiagnosticsDialog({ diagnostics, onClose }) { const [copied, setCopied] = useState(false); const details = diagnostics.checks.map((check) => `${(check.Passed ?? check.passed) ? 'PASS' : 'FAIL'} | ${check.Name ?? check.name}: ${check.Message ?? check.message}${(check.Hint ?? check.hint) ? ` Hint: ${check.Hint ?? check.hint}` : ''}`).join('\n'); async function copy() { await navigator.clipboard?.writeText(details); setCopied(true); window.setTimeout(() => setCopied(false), 2000) }; return <div className="fixed inset-0 z-[110] flex items-center justify-center p-4" style={{ background: 'var(--app-overlay-bg)' }}><div role="alertdialog" aria-modal="true" className="w-full max-w-2xl rounded-2xl border p-5 shadow-2xl" style={{ background: 'var(--app-content-bg)', color: 'var(--app-text)', borderColor: '#b91c1c' }}><h3 className="text-lg font-bold" style={{ color: '#b91c1c' }}>Support Settings diagnostics</h3><p className="mt-2 text-sm" style={{ color: 'var(--app-muted-text)' }}>Copy this safe diagnostic report for deployment troubleshooting.</p><pre className="mt-4 max-h-72 overflow-auto whitespace-pre-wrap rounded-lg border p-3 text-xs" style={{ background: 'var(--app-page-bg)', borderColor: 'var(--app-border)' }}>{details}</pre><div className="mt-5 flex justify-end gap-2"><button type="button" onClick={copy} className="rounded-lg border px-4 py-2 transition" style={{ borderColor: copied ? '#15803d' : 'var(--app-border)', color: copied ? '#15803d' : 'var(--app-text)' }}>{copied ? 'Copied !!!' : 'Copy'}</button><button type="button" onClick={onClose} className="rounded-lg px-4 py-2 font-semibold" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }}>Close</button></div></div></div> }
+export function DiagnosticsDialog({ diagnostics, onClose }) {
+  const [copied, setCopied] = useState(false)
+  const [recoveryPin, setRecoveryPin] = useState('')
+  const [recoveryMessage, setRecoveryMessage] = useState('')
+  const [savingRecoveryPin, setSavingRecoveryPin] = useState(false)
+  const details = diagnostics.checks.map((check) => `${(check.Passed ?? check.passed) ? 'PASS' : 'FAIL'} | ${check.Name ?? check.name}: ${check.Message ?? check.message}${(check.Hint ?? check.hint) ? ` Hint: ${check.Hint ?? check.hint}` : ''}`).join('\n')
+
+  async function copy() {
+    await navigator.clipboard?.writeText(details)
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 2000)
+  }
+
+  async function resetPin() {
+    if (recoveryPin.length < 5 || /\s/.test(recoveryPin)) {
+      setRecoveryMessage('PIN must contain at least 5 characters and no spaces.')
+      return
+    }
+    setSavingRecoveryPin(true)
+    setRecoveryMessage('')
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/support/config/diagnostics/reset-pin`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin: recoveryPin }) })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(result.message || 'Unable to reset the Support PIN.')
+      setRecoveryPin('')
+      setRecoveryMessage('PIN saved using the current server key ring. Close this dialog and verify with the new PIN.')
+    } catch (error) {
+      setRecoveryMessage(error.message)
+    } finally {
+      setSavingRecoveryPin(false)
+    }
+  }
+
+  return <div className="fixed inset-0 z-[110] flex items-center justify-center p-4" style={{ background: 'var(--app-overlay-bg)' }}><div role="alertdialog" aria-modal="true" className="w-full max-w-2xl rounded-2xl border p-5 shadow-2xl" style={{ background: 'var(--app-content-bg)', color: 'var(--app-text)', borderColor: '#b91c1c' }}><h3 className="text-lg font-bold" style={{ color: '#b91c1c' }}>Support Settings diagnostics</h3><p className="mt-2 text-sm" style={{ color: 'var(--app-muted-text)' }}>Copy this safe diagnostic report for deployment troubleshooting.</p><pre className="mt-4 max-h-72 overflow-auto whitespace-pre-wrap rounded-lg border p-3 text-xs" style={{ background: 'var(--app-page-bg)', borderColor: 'var(--app-border)' }}>{details}</pre>{diagnostics.canResetPin && <div className="mt-5 rounded-lg border p-4" style={{ borderColor: 'var(--app-border)', background: 'var(--app-page-bg)' }}><p className="text-sm font-semibold" style={{ color: 'var(--app-text)' }}>Administrator PIN recovery</p><p className="mt-1 text-xs" style={{ color: 'var(--app-muted-text)' }}>This saves a new PIN using the current server key ring.</p><div className="mt-3 flex flex-wrap gap-2"><input type="password" value={recoveryPin} onChange={(event) => setRecoveryPin(event.target.value)} placeholder="New Support PIN" className="h-10 min-w-0 flex-1 rounded-lg border px-3" style={inputStyle} /><button type="button" onClick={resetPin} disabled={savingRecoveryPin} className="rounded-lg px-4 py-2 font-semibold text-white disabled:opacity-60" style={{ background: '#b91c1c' }}>{savingRecoveryPin ? 'Saving...' : 'Save PIN'}</button></div>{recoveryMessage && <p className="mt-2 text-sm" style={{ color: recoveryMessage.startsWith('PIN saved') ? '#15803d' : '#b91c1c' }}>{recoveryMessage}</p>}</div>}<div className="mt-5 flex justify-end gap-2"><button type="button" onClick={copy} className="rounded-lg border px-4 py-2 transition" style={{ borderColor: copied ? '#15803d' : 'var(--app-border)', color: copied ? '#15803d' : 'var(--app-text)' }}>{copied ? 'Copied !!!' : 'Copy'}</button><button type="button" onClick={onClose} className="rounded-lg px-4 py-2 font-semibold" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }}>Close</button></div></div></div>
+}
