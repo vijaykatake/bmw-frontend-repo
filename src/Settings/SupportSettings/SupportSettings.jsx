@@ -40,7 +40,7 @@ export default function SupportSettings({ onCancel, settings, profile }) {
       if (!response.ok) {
         setPin('')
         setShowPin(false)
-        setError(response.status === 403 ? 'Invalid PIN. Access denied.' : result.message || 'Support Settings verification is currently unavailable.')
+        setError(result.message || (response.status === 403 ? 'Invalid PIN. Access denied.' : 'Support Settings verification is currently unavailable.'))
         return
       }
       setPin('')
