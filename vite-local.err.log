@@ -34,3 +34,23 @@ AggregateError [ECONNREFUSED]:
 AggregateError [ECONNREFUSED]: 
     at internalConnectMultiple (node:net:1430:18)
     at afterConnectMultiple (node:net:2099:7)
+[2m11:55:01 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/session[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m11:55:01 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/themes[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m11:55:01 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/session[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m11:55:01 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/themes[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m11:55:03 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
