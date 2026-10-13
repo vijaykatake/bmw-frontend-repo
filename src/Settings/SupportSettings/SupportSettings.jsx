@@ -1,8 +1,63 @@
-export default function SupportSettings() {
-  return (
-    <section className="rounded-2xl p-6 shadow-sm ring-1" style={{ background: 'var(--app-content-bg)', '--tw-ring-color': 'var(--app-border)' }}>
-      <h2 className="text-2xl font-bold">Support Settings</h2>
-      <p className="mt-2" style={{ color: 'var(--app-muted-text)' }}>Support settings functionality will be added in a later phase.</p>
-    </section>
-  )
+import { useEffect, useRef, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBan, faCheck, faEye, faEyeSlash, faKey, faSpinner, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { API_BASE_URL } from '../../config/api.js'
+
+export default function SupportSettings({ onCancel }) {
+  const [access, setAccess] = useState(false)
+  const [pin, setPin] = useState('')
+  const [showPin, setShowPin] = useState(false)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const pinRef = useRef(null)
+
+  useEffect(() => {
+    pinRef.current?.focus()
+  }, [])
+
+  async function verify(event) {
+    event.preventDefault()
+    if (submitting) return
+    if (!pin.trim()) {
+      setError('PIN is required.')
+      pinRef.current?.focus()
+      return
+    }
+
+    setSubmitting(true)
+    setError('')
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/support/verify-pin`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin }),
+      })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        setPin('')
+        setShowPin(false)
+        setError(response.status === 403 ? 'Invalid PIN. Access denied.' : result.message || 'Support Settings verification is currently unavailable.')
+        return
+      }
+      setPin('')
+      setShowPin(false)
+      setAccess(true)
+    } catch {
+      setError('Support Settings verification is currently unavailable.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function cancel() {
+    setPin('')
+    setShowPin(false)
+    setError('')
+    onCancel()
+  }
+
+  if (access) return <section className="rounded-2xl p-6 shadow-sm ring-1" style={{ background: 'var(--app-content-bg)', '--tw-ring-color': 'var(--app-border)' }}><h2 className="text-2xl font-bold">Support Settings</h2><p className="mt-2" style={{ color: 'var(--app-muted-text)' }}>Support settings functionality will be added in a later phase.</p></section>
+
+  return <div className="fixed inset-0 z-[65] flex items-center justify-center overflow-y-auto p-4" style={{ background: 'var(--app-overlay-bg)' }}><form onSubmit={verify} className="w-full max-w-md rounded-2xl border p-5 shadow-2xl" style={{ background: 'var(--app-content-bg)', color: 'var(--app-text)', borderColor: 'var(--app-border)' }}><div className="mb-5 flex items-center justify-between gap-3"><h3 className="flex min-w-0 items-center gap-2 text-sm font-medium sm:text-base"><span className="flex min-w-0 items-center gap-1.5" style={{ color: 'var(--app-primary)' }}><FontAwesomeIcon icon={faKey} aria-hidden="true" />Support Settings Verification</span></h3><button type="button" aria-label="Close" title="Close" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border shadow-md transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2" style={{ background: 'var(--app-page-bg)', color: 'var(--app-primary)', borderColor: 'var(--app-border)', '--tw-ring-color': 'var(--app-focus-ring)' }} onClick={cancel}><FontAwesomeIcon icon={faXmark} /></button></div><label className="relative mb-2 block pt-2 text-sm font-medium"><span className="pointer-events-none absolute left-3 top-0 z-10 px-1 text-sm font-semibold" style={{ background: 'var(--app-content-bg)', color: 'var(--app-primary)' }}>PIN</span><span className="relative block"><input ref={pinRef} type="text" value={pin} autoComplete="off" autoCorrect="off" autoCapitalize="none" spellCheck="false" inputMode="text" data-1p-ignore="true" data-lpignore="true" data-bwignore="true" placeholder="Enter Support Settings PIN" onChange={(event) => { setPin(event.target.value); if (error) setError('') }} className={`h-11 w-full rounded-lg border px-3 pr-11 outline-none focus-visible:ring-2 ${showPin ? '' : 'support-pin-masked'}`} style={{ background: 'var(--app-input-bg)', color: 'var(--app-text)', borderColor: 'var(--app-input-border)', '--tw-ring-color': 'var(--app-focus-ring)' }} /><button type="button" aria-label={showPin ? 'Hide PIN' : 'Show PIN'} title={showPin ? 'Hide PIN' : 'Show PIN'} onClick={() => setShowPin((visible) => !visible)} className="absolute inset-y-0 right-0 flex w-11 items-center justify-center transition hover:opacity-70 focus-visible:outline-none focus-visible:ring-2" style={{ color: 'var(--app-muted-text)', '--tw-ring-color': 'var(--app-focus-ring)' }}><FontAwesomeIcon icon={showPin ? faEyeSlash : faEye} /></button></span></label>{error && <p className="mb-4 text-sm font-semibold" style={{ color: '#b91c1c' }}>{error}</p>}<div className="mt-5 flex justify-end gap-2"><button type="button" className="flex items-center gap-2 rounded-lg border px-4 py-2 font-medium transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2" style={{ borderColor: 'var(--app-border)', color: 'var(--app-text)', '--tw-ring-color': 'var(--app-focus-ring)' }} onClick={cancel}><FontAwesomeIcon icon={faBan} />Cancel</button><button type="submit" disabled={submitting} className="flex items-center gap-2 rounded-lg px-4 py-2 font-semibold shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 disabled:opacity-60" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)', '--tw-ring-color': 'var(--app-focus-ring)' }}><FontAwesomeIcon icon={submitting ? faSpinner : faCheck} spin={submitting} />{submitting ? 'Verifying...' : 'Confirm'}</button></div></form></div>
 }

@@ -26,8 +26,20 @@
   --app-overlay-bg: rgba(15, 23, 42, 0.5);
 }
 
+.support-pin-masked {
+  -webkit-text-security: disc;
+}
+
 .app-topbar-action:hover {
   background: var(--app-header-hover-bg);
+}
+
+.ward-modal-close:hover {
+  background: var(--app-primary) !important;
+  border-color: var(--app-primary) !important;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--app-primary) 38%, transparent);
+  color: var(--app-sidebar-active-text) !important;
+  transform: rotate(90deg);
 }
 
 .sidebar-pin:hover {
@@ -40,11 +52,129 @@
   overflow-y: auto;
 }
 
+.data-loading-overlay {
+  align-items: center;
+  backdrop-filter: blur(2px);
+  background: color-mix(in srgb, var(--app-content-bg) 86%, transparent);
+  color: var(--app-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  inset: 0;
+  justify-content: center;
+  position: absolute;
+  z-index: 10;
+}
+
+.data-loading-spinner {
+  animation: data-loading-spin 900ms linear infinite;
+}
+
+.data-loading-message {
+  animation: data-loading-pulse 1.4s ease-in-out infinite;
+  display: inline-flex;
+}
+
+.data-loading-message::after {
+  animation: data-loading-dots 1.2s steps(4, end) infinite;
+  content: '';
+  display: inline-block;
+  overflow: hidden;
+  width: 1.15rem;
+}
+
+.bmw-processing-notice {
+  align-items: center;
+  background: var(--app-content-bg);
+  border: 0;
+  color: var(--app-text);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  max-width: 100%;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+}
+
+.bmw-processing-logo-frame {
+  align-items: center;
+  animation: bmw-processing-logo-pulse 1.8s ease-in-out infinite;
+  background: conic-gradient(#ef4444, #f59e0b, #22c55e, #06b6d4, #6366f1, #a855f7, #ef4444);
+  border-radius: 9999px;
+  display: inline-flex;
+  flex: 0 0 2.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  padding: 2px;
+  width: 2.5rem;
+}
+
+.bmw-processing-logo,
+.bmw-processing-logo-fallback {
+  align-items: center;
+  background: var(--app-content-bg);
+  border-radius: 9999px;
+  color: var(--app-primary);
+  display: inline-flex;
+  font-size: 0.55rem;
+  font-weight: 800;
+  height: 100%;
+  justify-content: center;
+  object-fit: contain;
+  padding: 0.25rem;
+  width: 100%;
+}
+
+.bmw-processing-copy {
+  align-items: baseline;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.bmw-processing-copy strong {
+  color: var(--app-primary);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .bmw-processing-notice {
+    gap: 0.5rem;
+    padding-inline: 0.25rem;
+  }
+
+  .bmw-processing-logo-frame {
+    flex-basis: 2.15rem;
+    height: 2.15rem;
+    width: 2.15rem;
+  }
+
+  .bmw-processing-copy strong {
+    font-size: 0.875rem;
+  }
+}
+
+.bmw-processing-dots::after {
+  animation: data-loading-dots 1.2s steps(4, end) infinite;
+  content: '';
+  display: inline-block;
+  overflow: hidden;
+  width: 1.15rem;
+}
+
 .transaction-notice {
   position: fixed;
   animation: transaction-notice-in 520ms ease-out;
   width: max-content;
   max-width: calc(100vw - 2rem);
+}
+
+@keyframes bmw-processing-logo-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--app-primary) 18%, transparent); transform: scale(1); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--app-primary) 8%, transparent); transform: scale(1.04); }
 }
 
 .transaction-notice::before {
@@ -130,8 +260,28 @@
   to { opacity: 1; transform: translateX(0); }
 }
 
+@keyframes data-loading-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes data-loading-pulse {
+  0%, 100% { opacity: 0.68; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-1px); }
+}
+
+@keyframes data-loading-dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75%, 100% { content: '...'; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sidebar-submenu-popup,
+  .data-loading-spinner,
+  .data-loading-message,
+  .bmw-processing-logo-frame,
+  .bmw-processing-dots,
   .transaction-notice,
   .transaction-notice-icon { animation: none; }
 }

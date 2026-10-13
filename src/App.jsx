@@ -3,6 +3,7 @@ import LoginScreen from './components/LoginScreen.jsx'
 import { useTheme } from './theme/ThemeContext.jsx'
 import AppLayout from './components/layout/AppLayout.jsx'
 import CookieConsent from './components/CookieConsent.jsx'
+import BmwProcessingNotice from './components/BmwProcessingNotice.jsx'
 import { API_BASE_URL } from './config/api.js'
 function App() {
   const { themes, loading, error, setActiveThemeById } = useTheme()
@@ -51,13 +52,17 @@ function App() {
   }
 
   let content
-  if (loading || checkingSession) content = <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500">Loading BMWSystem design system...</div>
+  if (loading || checkingSession) content = <ProcessingScreen message="Loading BMW System" />
   else if (!user) content = <LoginScreen onLogin={setUser} />
   else if (layoutError) content = <div className="flex min-h-screen items-center justify-center p-6 text-center text-red-700">{layoutError}</div>
-  else if (!layout) content = <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-500">Loading application layout...</div>
+  else if (!layout) content = <ProcessingScreen message="Loading BMW application layout" />
   else content = <AppLayout user={user} layout={layout} onLogout={logout} />
 
   return <>{content}<CookieConsent /></>
+}
+
+function ProcessingScreen({ message }) {
+  return <div className="flex min-h-screen items-center justify-center p-4" style={{ background: 'var(--app-page-bg)', color: 'var(--app-text)' }}><BmwProcessingNotice message={message} /></div>
 }
 
 export default App

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Breadcrumbs from './Breadcrumbs.jsx'
 import Sidebar from './Sidebar.jsx'
 import TopBar from './TopBar.jsx'
@@ -12,6 +12,7 @@ export default function AppLayout({ user, layout, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [path, setPath] = useState(() => window.location.pathname.toLowerCase())
+  const lastNonSupportPath = useRef(path === '/settings/supportsettings' ? '/profile' : path)
 
   useEffect(() => {
     const handlePopState = () => setPath(window.location.pathname.toLowerCase())
@@ -20,12 +21,14 @@ export default function AppLayout({ user, layout, onLogout }) {
   }, [])
 
   const navigate = (nextPath) => {
-    window.history.pushState({}, '', nextPath)
-    setPath(nextPath.toLowerCase())
+    const normalizedPath = nextPath.toLowerCase()
+    if (normalizedPath !== '/settings/supportsettings') lastNonSupportPath.current = normalizedPath
+    window.history.pushState({}, '', normalizedPath)
+    setPath(normalizedPath)
   }
 
   const currentMenu = useMemo(() => layout.menus.find((menu) => normalizePath(menu.menuUrl) === path), [layout.menus, path])
-  const content = path === '/master/ward' ? <Ward /> : path === '/profile' ? <Profile profile={layout.profile} /> : path === '/change-password' ? <ChangePassword /> : path === '/settings/supportsettings' ? <SupportSettings /> : <PlaceholderPage menu={currentMenu} />
+  const content = path === '/master/ward' ? <Ward /> : path === '/profile' ? <Profile profile={layout.profile} /> : path === '/change-password' ? <ChangePassword /> : path === '/settings/supportsettings' ? <SupportSettings onCancel={() => navigate(lastNonSupportPath.current)} /> : <PlaceholderPage menu={currentMenu} />
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--app-page-bg)', color: 'var(--app-text)' }}>
