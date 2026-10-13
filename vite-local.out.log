@@ -1,0 +1,17 @@
+
+> bmw-system-frontend@1.0.0 dev
+> vite --host localhost
+
+
+  [32m[1mVITE[22m v8.3.3[39m  [2mready in [0m[1m1377[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m9:38:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m9:38:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/TechMailGrid.jsx[22m
+[2m9:50:47 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/TechMailGrid.jsx[22m
+[2m10:38:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
+[2m10:39:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
+[2m11:01:54 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
+[2m11:13:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
+[2m11:16:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m

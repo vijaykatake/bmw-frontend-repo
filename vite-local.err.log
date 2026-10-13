@@ -1,0 +1,36 @@
+[2m9:54:37 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/support/tech-mail/transaction[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:54:50 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/support/tech-mail/transaction[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:55:47 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/session[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:55:47 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/themes[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:55:47 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/session[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:55:47 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/themes[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:55:48 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:55:50 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)
+[2m9:56:39 pm[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/auth/login[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1430:18)
+    at afterConnectMultiple (node:net:2099:7)

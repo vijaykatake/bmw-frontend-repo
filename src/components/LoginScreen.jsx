@@ -32,14 +32,18 @@ export default function LoginScreen({ onLogin }) {
         credentials: 'include',
         body: JSON.stringify({ loginId, password }),
       })
-      const result = await response.json()
-      if (!response.ok) throw new Error(result.message ?? 'Login failed.')
+      const result = await readJsonResponse(response)
+      if (!response.ok) {
+        throw new Error(result.message ?? (response.status === 401 ? 'The login ID or password is invalid.' : `Login failed (HTTP ${response.status}).`))
+      }
+      if (!result.user) throw new Error('Login response was incomplete. Please try again.')
       onLogin(result.user)
     } catch (error) {
-      setMessage(error.message)
+      setMessage(error.message || 'Login failed. Please try again.')
     } finally {
       setSubmitting(false)
     }
+
   }
 
   function cancel() {
@@ -49,6 +53,16 @@ export default function LoginScreen({ onLogin }) {
     setMessage('')
     setForgotMessage('')
   }
+
+async function readJsonResponse(response) {
+  const text = await response.text()
+  if (!text.trim()) return {}
+  try {
+    return JSON.parse(text)
+  } catch {
+    return {}
+  }
+}
 
   async function forgotPassword(event) {
     event.preventDefault()
