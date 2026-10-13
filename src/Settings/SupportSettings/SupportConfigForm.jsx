@@ -26,7 +26,12 @@ export default function SupportConfigForm() {
       const diagnosticResponse = await fetch(`${API_BASE_URL}/api/support/config/diagnostics`, { credentials: 'include' })
       const diagnosticResult = await diagnosticResponse.json().catch(() => ({}))
       if (!diagnosticResponse.ok) throw new Error(diagnosticResult?.message || 'Support Settings diagnostics could not be completed.')
-      if (!diagnosticResult.passed) { setDiagnostics(diagnosticResult); return }
+       const blockingFailure = (diagnosticResult.checks ?? []).some((check) => {
+         const passed = check.Passed ?? check.passed
+         const name = check.Name ?? check.name ?? ''
+         return !passed && name !== 'Gmail App Password protection'
+       })
+       if (!diagnosticResult.passed && blockingFailure) { setDiagnostics(diagnosticResult); return }
       const response = await fetch(`${API_BASE_URL}/api/support/config`, { credentials: 'include' })
       const result = await response.json()
       if (!response.ok) throw new Error(result?.message || 'Unable to load Support configuration.')

@@ -17,7 +17,6 @@ export default function SupportSettings({ onCancel, settings, profile }) {
 
   useEffect(() => {
     pinRef.current?.focus()
-    loadDiagnostics()
   }, [])
 
   useEffect(() => {
