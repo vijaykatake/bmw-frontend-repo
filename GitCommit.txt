@@ -1,0 +1,3 @@
+﻿git add .
+git commit -m "Master - Ward & Waste Type's Screens Are Online."
+git push origin main

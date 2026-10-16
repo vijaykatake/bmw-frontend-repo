@@ -289,3 +289,19 @@
 body {
   margin: 0;
 }
+
+.category-picker-option {
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.category-picker-option[aria-selected="true"] {
+  background-color: color-mix(in srgb, var(--app-primary) 14%, var(--app-content-bg));
+  font-weight: 600;
+}
+
+.category-picker-option:hover,
+.category-picker-option:focus-visible {
+  background-color: color-mix(in srgb, var(--app-primary) 16%, var(--app-content-bg)) !important;
+  color: var(--app-primary) !important;
+}

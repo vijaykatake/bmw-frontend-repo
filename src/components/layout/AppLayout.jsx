@@ -4,6 +4,7 @@ import Sidebar from './Sidebar.jsx'
 import TopBar from './TopBar.jsx'
 import { normalizePath } from './MenuTree.jsx'
 import Ward from '../../Master/Ward/Ward.jsx'
+import WasteType from '../../Master/WasteType/WasteType.jsx'
 import Profile from '../../Profile/Profile.jsx'
 import ChangePassword from '../../ChangePassword/ChangePassword.jsx'
 import SupportSettings from '../../Settings/SupportSettings/SupportSettings.jsx'
@@ -28,7 +29,7 @@ export default function AppLayout({ user, layout, onLogout }) {
   }
 
   const currentMenu = useMemo(() => layout.menus.find((menu) => normalizePath(menu.menuUrl) === path), [layout.menus, path])
-  const content = path === '/master/ward' ? <Ward settings={layout.settings} profile={layout.profile} /> : path === '/profile' ? <Profile profile={layout.profile} /> : path === '/change-password' ? <ChangePassword /> : path === '/settings/supportsettings' ? <SupportSettings settings={layout.settings} profile={layout.profile} onCancel={() => navigate(lastNonSupportPath.current)} /> : <PlaceholderPage menu={currentMenu} />
+  const content = path === '/master/ward' ? <Ward settings={layout.settings} profile={layout.profile} /> : path === '/master/wastetype' ? <WasteType settings={layout.settings} profile={layout.profile} /> : path === '/profile' ? <Profile profile={layout.profile} /> : path === '/change-password' ? <ChangePassword /> : path === '/settings/supportsettings' ? <SupportSettings user={user} settings={layout.settings} profile={layout.profile} onCancel={() => navigate(lastNonSupportPath.current)} /> : <PlaceholderPage menu={currentMenu} />
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--app-page-bg)', color: 'var(--app-text)' }}>

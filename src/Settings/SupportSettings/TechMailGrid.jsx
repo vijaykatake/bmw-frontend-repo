@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBan, faCheck, faClipboard, faDownload, faEdit, faFileExcel, faFilePdf, faFloppyDisk, faPlus, faSearch, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faBan, faCheck, faClipboard, faDownload, faEdit, faFileExcel, faFilePdf, faFloppyDisk, faPaperPlane, faPlus, faSearch, faSpinner, faTrash, faTriangleExclamation, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { API_BASE_URL } from '../../config/api.js'
@@ -9,7 +9,7 @@ import DataLoadingOverlay from '../../components/DataLoadingOverlay.jsx'
 const emptyForm = { techMailId: null, mailType: '', email: '', isTechMailActive: true }
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export default function TechMailGrid({ settings, profile }) {
+export default function TechMailGrid({ user, settings, profile }) {
   const [records, setRecords] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -23,6 +23,8 @@ export default function TechMailGrid({ settings, profile }) {
   const [notification, setNotification] = useState(null)
   const [confirmRecord, setConfirmRecord] = useState(null)
   const [errorDialog, setErrorDialog] = useState(null)
+  const [activeEmailTest, setActiveEmailTest] = useState(null)
+  const emailTestLock = useRef(false)
 
   async function loadData() {
     setLoading(true)
@@ -37,6 +39,42 @@ export default function TechMailGrid({ settings, profile }) {
     } finally {
       setLoading(false)
     }
+  }
+
+  async function sendEmailTest(endpoint, failureMessage, testType) {
+    if (emailTestLock.current) return
+    emailTestLock.current = true
+    setActiveEmailTest(testType)
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, { method: 'POST', credentials: 'include' })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(result.message || failureMessage)
+      setNotification({ type: 'success', message: `${result.message} Correlation ID: ${result.correlationId}` })
+    } catch (testError) {
+      showError(testError.message)
+    } finally {
+      emailTestLock.current = false
+      setActiveEmailTest(null)
+    }
+  }
+
+  function sendControlledErrorTest(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    return sendEmailTest('/api/support/email/test-error', 'Controlled error email test failed.', 'error')
+  }
+
+  function sendTestEmail(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    return sendEmailTest('/api/support/email/test', 'Email test failed.', 'test')
+  }
+
+  function handleTestButtonKeyDown(event, handler) {
+    if (event.code !== 'Space') return
+    event.preventDefault()
+    event.stopPropagation()
+    handler(event)
   }
 
   useEffect(() => { loadData() }, [])
@@ -118,7 +156,7 @@ export default function TechMailGrid({ settings, profile }) {
   }
 
   function showError(message) {
-    setErrorDialog(message)
+    setErrorDialog({ message: message || 'The TechMail operation could not be completed.' })
   }
 
   const exportRows = filteredRecords.slice(0, pageSize)
@@ -156,7 +194,13 @@ function toRgb(color) { const value = color.replace('#', ''); const hex = value.
       {notification && <TransactionNotice notification={notification} onDismiss={() => setNotification(null)} />}
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div><h2 className="text-xl font-bold">Email Support</h2><p className="mt-1 text-sm" style={{ color: 'var(--app-muted-text)' }}>Manage support email recipients.</p></div>
-        <button type="button" className="flex min-h-10 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }} onClick={openAdd}><FontAwesomeIcon icon={faPlus} />Add</button>
+        <div className="flex flex-wrap gap-3">
+          <button type="button" className="relative z-10 flex min-h-10 shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }} onClick={openAdd}><FontAwesomeIcon icon={faPlus} />Add</button>
+          {user?.roleId === 1 && <>
+            <button type="button" disabled={activeEmailTest === 'test'} aria-busy={activeEmailTest === 'test'} className="relative z-10 flex min-h-10 shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-60" style={{ background: '#0f766e', color: '#ffffff' }} onClick={sendTestEmail} onKeyDown={(event) => handleTestButtonKeyDown(event, sendTestEmail)}><FontAwesomeIcon icon={activeEmailTest === 'test' ? faSpinner : faPaperPlane} spin={activeEmailTest === 'test'} />{activeEmailTest === 'test' ? 'Testing...' : 'Test Email'}</button>
+            <button type="button" disabled={activeEmailTest === 'error'} aria-busy={activeEmailTest === 'error'} className="relative z-10 flex min-h-10 shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-60" style={{ background: '#b91c1c', color: '#ffffff' }} onClick={sendControlledErrorTest} onKeyDown={(event) => handleTestButtonKeyDown(event, sendControlledErrorTest)}><FontAwesomeIcon icon={activeEmailTest === 'error' ? faSpinner : faTriangleExclamation} spin={activeEmailTest === 'error'} />{activeEmailTest === 'error' ? 'Testing...' : 'Test Error Email'}</button>
+          </>}
+        </div>
       </div>
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <label className="relative min-w-[12rem] flex-1 basis-64"><span className="sr-only">Search Support Settings email records</span><FontAwesomeIcon icon={faSearch} className="absolute left-3 top-3 text-sm" style={{ color: 'var(--app-muted-text)' }} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search Email Support" className="h-10 w-full rounded-lg border pl-9 pr-3 text-sm outline-none focus-visible:ring-2" style={{ background: 'var(--app-input-bg)', color: 'var(--app-text)', borderColor: 'var(--app-input-border)', '--tw-ring-color': 'var(--app-focus-ring)' }} /></label>
@@ -165,7 +209,7 @@ function toRgb(color) { const value = color.replace('#', ''); const hex = value.
       </div>
       {error && <p className="mb-4 rounded-lg border p-3 text-sm" style={{ color: '#b91c1c', borderColor: 'var(--app-border)' }}>{error}</p>}
       <div className="relative overflow-x-auto rounded-xl border" aria-busy={loading} style={{ borderColor: 'var(--app-border)' }}><table className="min-w-[980px] w-full text-left text-sm"><thead style={{ background: 'var(--app-page-bg)', color: 'var(--app-muted-text)' }}><tr>{columns.map(([name]) => <th key={name} className="whitespace-nowrap px-3 py-3 font-semibold">{name}</th>)}<th className="px-3 py-3 font-semibold">Action</th></tr></thead><tbody>{loading ? <tr><td colSpan="8" className="px-3 py-8 text-center">Loading Support Settings records...</td></tr> : !exportRows.length ? <tr><td colSpan="8" className="px-3 py-8 text-center" style={{ color: 'var(--app-muted-text)' }}>No Support Settings email records found.</td></tr> : exportRows.map((record) => <tr key={record.techMailId} className="border-t" style={{ borderColor: 'var(--app-border)' }}><td className="px-3 py-3"><MailTypeBadge type={record.mailType} /></td><td className={`px-3 py-3 ${!emailPattern.test(record.email) ? 'font-semibold text-red-700' : ''}`}>{record.email}</td><td className="px-3 py-3 text-center"><ActiveToggle active={record.isTechMailActive} /></td><td className="px-3 py-3">{record.aUser || '-'}</td><td className="whitespace-nowrap px-3 py-3">{record.aDate || '-'}</td><td className="px-3 py-3">{record.uUser || '-'}</td><td className="whitespace-nowrap px-3 py-3">{record.uDate || '-'}</td><td className="px-3 py-3"><div className="flex gap-1"><IconButton label={`Edit TechMail ${record.email}`} icon={faEdit} onClick={() => openEdit(record)} /><IconButton label={`Delete TechMail ${record.email}`} icon={faTrash} onClick={() => setConfirmRecord(record)} /></div></td></tr>)}</tbody></table>{loading && <DataLoadingOverlay message="Loading Support Settings records, please wait" />}</div>
-      {modalOpen && <TechMailModal form={form} setForm={setForm} errors={fieldErrors} hints={fieldHints} validateField={validateField} saving={saving} onClose={() => !saving && setModalOpen(false)} onSubmit={save} editing={Boolean(form.techMailId)} />}{confirmRecord && <ConfirmDialog record={confirmRecord} onNo={() => setConfirmRecord(null)} onYes={deleteRecord} />}{errorDialog && <ErrorDialog message={errorDialog} onClose={() => setErrorDialog(null)} />}
+       {modalOpen && <TechMailModal form={form} setForm={setForm} errors={fieldErrors} hints={fieldHints} validateField={validateField} saving={saving} onClose={() => !saving && setModalOpen(false)} onSubmit={save} editing={Boolean(form.techMailId)} />}{confirmRecord && <ConfirmDialog record={confirmRecord} onNo={() => setConfirmRecord(null)} onYes={deleteRecord} />}{errorDialog && <ErrorDialog message={errorDialog.message} onClose={() => setErrorDialog(null)} />}
     </section>
   )
 }
@@ -189,8 +233,35 @@ function TransactionNotice({ notification, onDismiss }) {
 }
 
 function ErrorDialog({ message, onClose }) {
-  async function copy() { await navigator.clipboard?.writeText(message) }
-  return <div className="fixed inset-0 z-[67] flex items-center justify-center p-4" style={{ background: 'var(--app-overlay-bg)' }}><div role="alertdialog" aria-modal="true" className="w-full max-w-lg rounded-2xl border p-5 shadow-2xl" style={{ background: 'var(--app-content-bg)', color: 'var(--app-text)', borderColor: '#b91c1c' }}><h3 className="text-lg font-bold" style={{ color: '#b91c1c' }}>TechMail operation error</h3><p className="mt-3 break-words text-sm">{message}</p><div className="mt-5 flex justify-end gap-2"><button type="button" className="flex items-center gap-2 rounded-lg border px-4 py-2" style={{ borderColor: 'var(--app-border)' }} onClick={copy}><FontAwesomeIcon icon={faClipboard} />Copy</button><button type="button" className="rounded-lg px-4 py-2" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }} onClick={onClose}>Close</button></div></div></div>
+  const [recipient, setRecipient] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [sendMessage, setSendMessage] = useState('')
+
+  async function copy() {
+    await navigator.clipboard?.writeText(message)
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 2000)
+  }
+
+  async function sendDetails(event) {
+    event.preventDefault()
+    if (!recipient.trim() || sending) return
+    setSending(true)
+    setSendMessage('')
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/support/email/error-details`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: recipient.trim(), errorMessage: message }) })
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(result.message || 'The error details email could not be sent.')
+      setSendMessage(`Sent successfully. Correlation ID: ${result.correlationId}`)
+    } catch (sendError) {
+      setSendMessage(sendError.message)
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return <div className="fixed inset-0 z-[67] flex items-center justify-center overflow-y-auto p-4" style={{ background: 'var(--app-overlay-bg)' }}><div role="alertdialog" aria-modal="true" aria-labelledby="techmail-error-title" className="w-full max-w-lg rounded-2xl border p-5 shadow-2xl" style={{ background: 'var(--app-content-bg)', color: 'var(--app-text)', borderColor: 'var(--app-border)' }}><div className="flex items-start gap-3"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ background: 'color-mix(in srgb, var(--app-primary) 15%, var(--app-content-bg))', color: 'var(--app-primary)' }}><FontAwesomeIcon icon={faTriangleExclamation} /></span><div><h3 id="techmail-error-title" className="text-lg font-bold" style={{ color: 'var(--app-primary)' }}>TechMail operation failed</h3><p className="mt-1 text-sm" style={{ color: 'var(--app-muted-text)' }}>Review the details below or send them to a person responsible for resolving the issue.</p></div></div><div className="mt-4 rounded-xl border p-3" style={{ background: 'var(--app-page-bg)', borderColor: 'var(--app-border)' }}><p className="break-words whitespace-pre-wrap text-sm">{message}</p></div><form onSubmit={sendDetails} className="mt-4"><label className="block text-sm font-semibold">Send details to email<input type="email" required value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder="recipient@example.com" className="mt-2 h-11 w-full rounded-lg border px-3 font-normal outline-none focus-visible:ring-2" style={{ background: 'var(--app-input-bg)', color: 'var(--app-text)', borderColor: 'var(--app-input-border)', '--tw-ring-color': 'var(--app-focus-ring)' }} /></label>{sendMessage && <p className="mt-2 text-sm font-semibold" style={{ color: 'var(--app-primary)' }}>{sendMessage}</p>}<div className="mt-5 flex flex-wrap justify-end gap-2"><button type="button" className="flex items-center gap-2 rounded-lg border px-4 py-2" style={{ borderColor: 'var(--app-border)', color: 'var(--app-text)' }} onClick={copy}><FontAwesomeIcon icon={faClipboard} />{copied ? 'Copied !!!' : 'Copy'}</button><button type="submit" disabled={sending} className="flex items-center gap-2 rounded-lg px-4 py-2 font-semibold disabled:opacity-60" style={{ background: 'var(--app-primary)', color: 'var(--app-sidebar-active-text)' }}><FontAwesomeIcon icon={faEnvelope} />{sending ? 'Sending...' : 'Send Details'}</button><button type="button" className="rounded-lg border px-4 py-2" style={{ borderColor: 'var(--app-border)', color: 'var(--app-text)' }} onClick={onClose}>Close</button></div></form></div></div>
 }
 
 function TechMailModal({ form, setForm, errors, hints, validateField, saving, onClose, onSubmit, editing }) {

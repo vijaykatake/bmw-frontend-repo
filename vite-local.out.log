@@ -1,28 +1,45 @@
 
 > bmw-system-frontend@1.0.0 dev
-> vite --host localhost
+> vite --host 0.0.0.0
 
 
-  [32m[1mVITE[22m v8.3.3[39m  [2mready in [0m[1m1377[22m[2m[0m ms[22m
+  [32m[1mVITE[22m v8.3.3[39m  [2mready in [0m[1m1477[22m[2m[0m ms[22m
 
   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.56.1:[1m5173[22m/[39m   [2mEthernet 2[22m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.109.2:[1m5173[22m/[39m  [2mEthernet 3[22m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.1.104:[1m5173[22m/[39m  [2mEthernet[22m
 [2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
-[2m9:38:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
-[2m9:38:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/TechMailGrid.jsx[22m
-[2m9:50:47 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/TechMailGrid.jsx[22m
-[2m10:38:19 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m10:39:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m11:01:54 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m11:13:57 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m11:16:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m11:52:16 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m11:52:32 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m12:06:24 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m12:48:15 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx, /src/index.css[22m
-[2m12:48:15 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [33mhmr invalidate [39m[2m/src/Settings/SupportSettings/SupportConfigForm.jsx[22m Could not Fast Refresh (export "DiagnosticsDialog" added)
-[2m12:48:15 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m12:48:15 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m12:48:55 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m12:51:57 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m12:52:18 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
-[2m12:54:54 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Settings/SupportSettings/SupportSettings.jsx[22m
+[2m10:35:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m10:52:41 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m10:53:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:22:16 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:23:38 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:24:36 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:26:09 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:36:44 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m11:37:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:38:08 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m11:38:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:38:50 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:45:51 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m11:46:00 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m11:46:25 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:46:49 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:53:32 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m11:53:50 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:54:18 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m11:54:47 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m12:01:39 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m12:01:39 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:12:11 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css[22m
+[2m12:12:21 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:22:33 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:23:02 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:28:38 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m12:28:38 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:29:19 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/Ward/Ward.jsx[22m
+[2m12:29:32 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:38:59 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:41:16 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
+[2m12:46:54 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/Master/WasteType/WasteType.jsx[22m
