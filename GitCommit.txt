@@ -1,3 +1,3 @@
 ﻿git add .
-git commit -m "First Phase Work On Staging. Dropdown Error Tracker."
+git commit -m "First Phase Work On Staging. Server Pool Set To .Net Core."
 git push origin main
