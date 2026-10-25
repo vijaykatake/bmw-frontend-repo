@@ -33,14 +33,14 @@ export default function MenuTree({ menus, currentPath, collapsed, mobileCollapse
   const [popupPosition, setPopupPosition] = useState(null)
   const popupRef = useRef(null)
   const closeTimer = useRef(null)
-  const masters = menus.filter((menu) => menu.parentMenuId === null)
-  const childrenByParent = new Map()
-  menus.filter((menu) => menu.parentMenuId !== null).forEach((menu) => {
-    const children = childrenByParent.get(menu.parentMenuId) ?? []
-    children.push(menu)
-    childrenByParent.set(menu.parentMenuId, children)
-  })
-  const currentParentMenuId = menus.find((menu) => menu.parentMenuId !== null && normalizePath(menu.menuUrl) === currentPath)?.parentMenuId ?? null
+    const masters = (menus || []).filter((menu) => menu.parentMenuId === null);
+    const childrenByParent = new Map();
+    (menus || []).filter((menu) => menu.parentMenuId !== null).forEach((menu) => {
+        const children = childrenByParent.get(menu.parentMenuId) ?? [];
+        children.push(menu);
+        childrenByParent.set(menu.parentMenuId, children);
+    });
+    const currentParentMenuId = menus?.find((menu) => menu.parentMenuId !== null && normalizePath(menu.menuUrl) === currentPath)?.parentMenuId ?? null
 
   useEffect(() => {
     setExpandedMasterMenuId(currentParentMenuId)

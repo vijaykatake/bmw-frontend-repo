@@ -41,10 +41,10 @@ export default function AppLayout({ user, layout, onLogout }) {
     setPath(normalizedPath);
   };
 
-  const currentMenu = useMemo(
-    () => layout.menus.find((menu) => normalizePath(menu.menuUrl) === path),
-    [layout.menus, path],
-  );
+    const currentMenu = useMemo(
+        () => (layout?.menus || []).find((menu) => normalizePath(menu.menuUrl) === path),
+        [layout?.menus, path],
+    );
 
   const content =
     path === "/master/ward" ? (

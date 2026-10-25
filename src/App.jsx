@@ -35,7 +35,7 @@ function App() {
 
   useEffect(() => {
     if (!layout) return
-    const themeId = layout.profile.themeId ?? themes.find((theme) => theme.isDefault)?.themeId
+      const themeId = layout?.profile?.themeId ?? (themes || []).find((theme) => theme.isDefault)?.themeId;
     if (themeId) setActiveThemeById(themeId)
   }, [layout, themes, setActiveThemeById])
 

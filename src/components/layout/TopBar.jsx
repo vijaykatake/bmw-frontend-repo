@@ -17,8 +17,8 @@ export default function TopBar({ settings, profile, onMenuToggle, onNavigate, on
         </button>
         <div className="min-w-0 flex-1">
           <h1 className="truncate whitespace-nowrap text-[0.9375rem] font-bold leading-tight sm:text-lg">
-            {settings.hospitalName}
-            {settings.versionNumber && <span className="ml-1.5 text-[0.6875rem] font-normal italic sm:ml-2 sm:text-sm" style={{ color: 'var(--app-muted-text)' }}>v{settings.versionNumber}</span>}
+            {settings?.hospitalName}
+            {settings?.versionNumber && <span className="ml-1.5 text-[0.6875rem] font-normal italic sm:ml-2 sm:text-sm" style={{ color: 'var(--app-muted-text)' }}>v{settings.versionNumber}</span>}
           </h1>
         </div>
       </div>
