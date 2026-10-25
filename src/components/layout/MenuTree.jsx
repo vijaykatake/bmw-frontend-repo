@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faBed, faBox, faBoxOpen, faCalendarAlt, faCalendarCheck, faCalendarDay, faChartBar,
+  faBed, faBox, faBoxOpen, faCalendarAlt, faCalendarCheck, faCalendarDay, faChartBar, faCheckCircle, faCircleCheck,
   faChevronDown, faChevronRight, faClipboardCheck, faClinicMedical, faCog, faCogs, faDesktop,
   faDolly, faDollyFlatbed, faDumpster, faFileInvoiceDollar, faHourglassHalf, faHospitalUser, faLifeRing, faPalette,
   faQrcode, faReceipt, faRecycle, faServer, faShoppingBag, faSlidersH, faTools, faTrashAlt,
@@ -12,7 +12,7 @@ import {
 const icons = {
   'fa-bed': faBed, 'fa-box': faBox, 'fa-box-open': faBoxOpen, 'fa-calendar-alt': faCalendarAlt,
   'fa-calendar-check': faCalendarCheck, 'fa-calendar-day': faCalendarDay,
-  'fa-chart-bar': faChartBar, 'fa-clipboard-check': faClipboardCheck, 'fa-clinic-medical': faClinicMedical,
+  'fa-chart-bar': faChartBar, 'fa-check-circle': faCheckCircle, 'fa-circle-check': faCircleCheck, 'fa-clipboard-check': faClipboardCheck, 'fa-clinic-medical': faClinicMedical,
   'fa-cog': faCog, 'fa-cogs': faCogs, 'fa-desktop': faDesktop, 'fa-dolly': faDolly,
   'fa-dolly-flatbed': faDollyFlatbed, 'fa-dumpster': faDumpster, 'fa-file-invoice-dollar': faFileInvoiceDollar,
   'fa-hourglass-half': faHourglassHalf, 'fa-hospital-user': faHospitalUser, 'fa-life-ring': faLifeRing, 'fa-palette': faPalette,

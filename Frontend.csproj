@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="src\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="public\assets\images\profile\" />
   </ItemGroup>
 </Project>

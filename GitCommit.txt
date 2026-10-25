@@ -1,3 +1,3 @@
 ﻿git add .
-git commit -m "Master - Ward & Waste Type's Screens Are Online."
+git commit -m "First Phase Work On Staging."
 git push origin main

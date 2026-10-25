@@ -5,8 +5,8 @@ D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.GeneratedM
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.AssemblyInfoInputs.cache
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.AssemblyInfo.cs
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.csproj.CoreCompileInputs.cache
+D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.sourcelink.json
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.dll
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\refint\Frontend.dll
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.pdb
 D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\ref\Frontend.dll
-D:\Working\BioMedicalWaste\BMW V01\Frontend\obj\Debug\net8.0\Frontend.sourcelink.json

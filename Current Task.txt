@@ -14,6 +14,18 @@ Programming Standard:
 १३. प्रत्येक स्टॅंडर्ड स्टोअर्ड प्रोसिजरमध्ये @DBCommand varchar(max)=null हा पॅरामीटर कंपलसरी असेल. कंट्रोलरमधून प्रोसिजर कॉल करताना  यामधें  @DBCommand योग्य पाठवा. सदर कमांड sql server management studio मध्ये रन करून रिझल्ट पाहता आले पाहिजेत. sql server एरर ट्रेकिंगसाठी हा अतिशय महत्वाचा पॅरामीटर आहे. स्टोरेड प्रोसिजरमध्ये एरर आल्यास हा पॅरामीटर [BMWLog].[SQLLog]  टेबलमध्ये [DML] कॉलममध्ये सेट होतो. हा लॉग  टेक्निकल टीमने पाहिल्यास एरर सॉल्व करण्यास अधिक ज्यास्त मदत होते. त्यामुळे @DBCommand पॅरामीटरला योग्य कमांड गाणे गरजेचे आहे.उदा: ,@DBCommand = ' Exec [BMWMaster].[CRUID_BMWMaster_WasteType] @BMWTransValue=5'
 १४. प्रत्येक स्टोरेड प्रोसिजर कंट्रोलरकडून डेटाबेसकडे पाठवताना sql server management studio मध्ये रण होण्यासाठीची कमांड डेटाबेस मध्ये @DBCommand तर्फे जाणे गरजेचे आहे. अप्लिकेशन मध्ये कंट्रोलर कडून  जाणारी प्रत्येक कमांड जी sql server management studio मधून रान करण्याच्या sql फॉरमॅटमध्ये पाठवा.
 ------------------------------------------------------------
+Disposal Location's च्या स्क्रीनवर कोडिंग करायची आहे. Waste Type च्या स्क्रीनचा पूर्ण रेफरन्स घ्या. Disposal Location's स्क्रीन पूर्णपणे  Waste Type ची कॉपी पेस्ट स्क्रीन आहे. त्यामध्ये केवळ  डेटाबेसचे प्रोसिजर बदलेल, प्रोसिजरचे पॅरामीटर बदलतील, स्क्रीनवरील इंपुटचे लेबल बदलतील. संबंधित बदल खालीलप्रमाणे :
+०१. Waste Category चे टायटल Disposal Type करा. EXEC [BMWMaster].[CRUID_BMWMaster_DisposalLocation] @BMWTransValue=6; ने ड्रॉपडाऊनला लिस्ट येईल. त्यामध्ये DisposalTypeId हा व्हल्यु ठेवा व DisposalTypeName टेक्स्ट ठेवा. [BMWMaster].[DisposalLocation]  टेबलमध्ये [BMWMaster].[CRUID_BMWMaster_DisposalLocation] प्रोसिजरमधील @BMWDisposalTypeId हा पॅरामीटर  DisposalTypeId साठी जाईल. ड्रॉपडाऊनमध्ये Select Waste Category ऐवजी Select Disposal Type वापरा. ड्रॉपडाऊनमध्ये सिलेक्ट करण्यास DisposalTypeName दिसेल.
+०२. Waste Type ऐवजी Disposal Location टायटल वापरा. [BMWMaster].[CRUID_BMWMaster_DisposalLocation]  मधील @BMWDisposalLocationName हा पॅरामीटर असून टेबलमधील [DisposalLocationName] हा व्हॅल्यू आहे.
+०३. Description कॉलम नेम बरोबर असून @BMWDisposalLocationDescription हा स्टोअर्ड प्रोसिजरचा व्हॅल्यू असून डेटाबेस टेबल DisposalLocation चा  DisposalLocationDescription हा कॉलम आहे.
+०४. <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1"><h2 class="text-2xl font-bold">Waste Type</h2><p class="text-sm italic" style="color: var(--app-muted-text);">Manage Waste Types</p></div> पुढीलप्रमाणे लिहा. <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1"><h2 class="text-2xl font-bold">Disposal Location</h2><p class="text-sm italic" style="color: var(--app-muted-text);">Manage Disposal Location's</p></div> 
+०५. डेटाटेबल मध्ये . डेटा पॉप्युलेट करण्यासाठी EXEC [BMWMaster].[CRUID_BMWMaster_DisposalLocation] @BMWTransValue = 5; हि कमांड वापरा. Waste Category = Disposal Type, Wate Type = Disposal Location, Waste Desc = Location Desc असे बदल करा.
+०६. एक्स्पोर्ट बटनची functionality आहे तशीच ठेवा. फक्त क्वालमची नावे बदलतील.
+०७. ईमेल इंजिनची functionality  स्टॅण्डर्डप्रमाणे ठेवा.
+०८. काही समस्या प्रश्न असतील तर विचारा अन्यथा डेव्हलोपमेंट करा.
+०९. BMW.sql फाईलचा पाथ D:\Working\BioMedicalWaste\BMW V01\Database\BMW.sql हा आहे. जो तुम्हाला सापडत नाही त्यासाठी हा पॉईंट पुन्हा ऍड करत आहे. 
+[ Desktop Cursor साठी हा प्रॉम्प्ट इंग्रजीत लिहून द्या. ]
+------------------------------------------------------------
 वार्निंग्स : तुम्ही डेव्हलप केलेल्या Waste Type's मास्टरमध्ये तुमच्याकडून होणाऱ्या व टाळाटाळ केल्या जाणाऱ्या खालील बाबी निदर्शास आलेल्या आहेत.  
 ०१. तुम्हाला पूर्ण रेफरन्स दिलेला असतानाही तुम्ही सूचनांचे तंतोतंत पालन केलेले नाही. असे निदर्शनास येत आहे.
 ०२. टॉप राईटला जे नोटिफिकेशन दाखवले जात आहेत ते वॉर्डस्क्रीनच्या स्टॅंडर्डप्रमाणे अजिबात बनवले नव्हते. 
@@ -21,10 +33,25 @@ Programming Standard:
 ०४. फॉर्मवरील <div class="mb-5 flex flex-wrap items-center justify-between gap-3"> मध्ये <div><h2 class="text-2xl font-bold">Waste Type</h2><p class="text-sm italic" style="color: var(--app-muted-text);">Manage Waste Types</p></div>  हे वॉर्ड स्क्रीनचा रेफरन्स असतानाही सिंगल लाईन मध्ये सेट केले नव्हते. 
 ०५. एक्सपोर्ट बटणांचे अलाइनमेंट चुकीचे केलेलं होते. ते सेन्टर अलाइन करण्याएवजी राईट्ला अलाइन केले होते व पूर्ण अव्यवस्थित दिसत होते.
 पुन्हा पुन्हा तेच ते प्रॉम्ट देऊन हैराण होण्याची वेळ आली. तुम्हाला सर्व स्टॅण्डर व स्पेसिफिकेशन दिलेले असतानाही त्याचे पालन अजिबात केले जात नाही. त्यामुळे वेळ वाया गेला. बाजारातील स्पर्धा लक्षात घ्या. अन्यथा मला इतर क्वालिटी ए. आई. कडे वळावे लागेल. तुमचे स्बक्रिप्शन रद्द करावे लागेल. तुमच्या या वर्तणुकीमुळे तुमचे क्लायन्ट तुम्हाला सोडून जाऊ शकतात. तुम्ही स्मार्ट वर्तन करणे गरजेचे आहे.
-------------------------------------------------------------
-०१. वॉर्डस्क्रीनचा रेफरन्स कायम ठेवा.
-०२. Storage Room (/master/storageroom) हा सिंगल स्क्रीन,  सिंगल फॉर्म रेफरन्स आहे. फॉरीन की कोठेही नाही. सरळ एका टेबलमध्ये क्रूड ऑपरेशन करायचे आहे. 
-०३. Exec [BMWMaster].[CRUID_BMWMaster_StorageRoom] चा रेफरन्स घ्या. डेटाबेस स्टॅंडर्ड व स्क्रीन स्टॅंडर्ड आहे तशीच आहे.
-०४. कुठंही प्रश्न असल्यास डेव्हलोपमेंट सुरु करण्यापूर्वी विचारा. शंका असेल तर लगोलग काम सुरु करू नका. शंका नसेल तर Storage Room  ची functionality लोगोलग व्यवस्थित पूर्ण करा.
-०५. BMW.sql फाईलचा पाथ D:\Working\BioMedicalWaste\BMW V01\Database\BMW.sql हा आहे. जो तुम्हाला सापडत नाही त्यासाठी हा पॉईंट पुन्हा ऍड करत आहे. 
-[ github copilot chat साठी हा प्रॉम्प्ट इंग्रजीत लिहून द्या. ]
+
+
+
+[ जमिनीला हा प्रॉम्प्ट द्यायचा आहे. इंग्रजीत लिहा. ]
+महत्वाचे: चालू कोड ठीक आहे. कुठलाही बदल करू. कुठलाही कोड स्किप करू नका. इग्नोर करू नका. गरजेचे बदल करा फक्त.
+http://localhost:5173/ward/wardinchargeapproval च्या स्क्रीनवर काम सुरु  आहे.  खालील काही बग फिक्स करा. 
+०१ अँप्रोव्हच्या बटनसाठी QR LABEL ATTACHMENT REQUIRED या Packaging.jsx मधील डायलॉगचा रेफरन्स घ्या. QR LABEL ATTACHMENT REQUIRED ऐवजी  " Are You Sure To Approve Following Waste Bag? " असा किंवा समर्पक प्रश्न विचारा. प्रश्नचिन्ह आयकॉन दाखवा. "Have you printed the QR code and securely attached the label to the correct BMW waste bag? Confirm only after completing this step. The package cannot be saved until you confirm.” ऐवजी आहे तसा Waste Package Details चा कन्टेन्ट दाखवा.  Regenerate & Print QR Code बटन नको आहे.  Yes (Proceed & Save) ऐवजी  Yes (Proceed & Approve) असे टायटल देऊन बटनचा समर्पक आयकॉन चेंज करा. अँप्रोव्ह प्रमाणे.
+०२. अँप्रोव्ह झाल्यावर डेटाबेसमध्ये प्रोसिजरमधून  IF(@BMWTransValue = 6) या कॉलने स्टेज बदलत आहे. परंतु सध्या डेटाटेबलमध्ये रेकॉर्ड दिसत आहे. हा बग आहे. तो रिझॉल्व करा.
+
+
+[ जमिनीला हा प्रॉम्प्ट द्यायचा आहे. इंग्रजीत लिहा. ]
+महत्वाचे: चालू कोड ठीक आहे. कुठलाही बदल करू. कुठलाही कोड स्किप करू नका. इग्नोर करू नका. गरजेचे बदल करा फक्त.
+http://localhost:5173/ward/storageareashifting या स्क्रीनवर कोडींगचे काम सुरु करायचे आहे.
+०१. D:\Working\BioMedicalWaste\BMW V01\Backend\Controllers\Transaction\StorageAreaShiftingController.cs एम्प्टी फाईल तयार केली आहे.
+०२. D:\Working\BioMedicalWaste\BMW V01\Frontend\src\Transaction\Ward\StorageAreaShifting.jsx एम्प्टी फाईल तयार केली आहे.
+०३. http://localhost:5173/ward/storageareashifting राऊट व्यवस्थित सेट झाला आहे.
+०४. WardInChargeApproval.jsx च्या पेजची हि कॉपी असून फक्त ठराविक बदल केल्यावर StorageAreaShifting कार्यरत होईल. ते  खालीलप्रमाणे.
+अ) Storage Area Approval डेटाटेबल हेडिंग ऐवजी Storage Area Shifting टायटल करा. 
+ब)  Approve बटनचे नाव Shift करा. व शिफ्टिंगच्या रिलेटेड योग्य आयकॉन सेट करा.
+क) Shift बटन क्लिक केल्यावर पॉपअप होणाऱ्या डायलॉगला शिफ्टिंगच्या रिलेटेड योग्य आयकॉन सेट करा. Are You Sure To Approve Following Waste Bag? ऐवजी स्टोरेज एरिया नावाचे टायटल सेट करून ड्रॉपडाऊन तयार करा. ड्रॉपडाऊनमध्ये  IF(@BMWTransValue = 12) या कंडिशनवर [BMWTransaction].[CRUID_BMWTransaction_WardEntry] स्टोअर्ड प्रोसिजरमधून लिस्ट तयार करा. SELECT 0 AS [StorageAreaId], 'Select Storage Area ... ' AS [StorageAreaName], '' AS [StorageAreaDescription] UNION SELECT [StorageAreaId], [StorageAreaName], [StorageAreaDescription] FROM [BioMedicalWaste].[BMWMaster].[StorageArea] Where [IsStorageAreaActive] = 'true' And [IsStorageAreaDeleted] = 'false' Order By [StorageAreaId]; कंडिशन नुसार [StorageAreaId] हा व्हॅल्यू व [StorageAreaName] टेक्स्ट ठेवा. ड्रॉपडाऊननंतर टेक्स्ट मध्ये जशी ड्रॉपडाऊनचे सिलेक्शन चेंग होईल तसे टेक्स्टमध्ये [StorageAreaDescription]  डायनॅमिकली दाखवा. नंतरचा कन्टेन्ट ठीक आहे. त्यानंतर एक ऑप्शनल इनपुट जे कि StorageAreaRemark आहे ते इनपुट करण्यासाठी Storage Area Remark नावाने फ्लोटिंग मल्टिटेक्स्ट टेक्स्टएरिया तयार करा. आहे तसाच दाखवा. Yes (Proceed & Approve) बटनचे टायटल Yes (Proceed & Shift)  ठेवा.  Yes (Proceed & Shift) क्लिक केल्यावर व्हॅलिडेशन महत्वाचे आहे. जर ड्रॉपडाऊनचा व्हॅल्यू 0 असेल तर प्रॉपर मेसेज देऊन ड्रॉपडाऊन मधील योग्य एरिया सिलेक्ट करायला लावा. जर बरोबर एरिया सिलेक्ट केला असेल तर कन्फर्म बॉक्सने विचारा. Are You Sure To Shift Waste Bag? डिफाल्ट बटन नो ठेवा. जर एस क्लिक केल्यास [BMWTransaction].[CRUID_BMWTransaction_WardEntry] प्रोसिजर रन करून ( @BMWWardEntryId, @BMWStorageAreaRemark, @BMWTransUserID = लॉग्ड युझर आई डि, @BMWTransValue = १३ ) डेटा टेबल रिफ्रेश करा.  
+०५. कंट्रोलरमध्ये डेटाटेबलसाठी डेटा पॉप्युलेट करताना  IF(@BMWTransValue = 11) कंडिशनसाठी [Main].StatusID = ४ ने डेटा रिट्राईव्ह करा.
+०६. संबंधीत सर्व फाईल रेफरन्ससाठी अपलोड करत आहे. काही शंका असल्यास किंवा गरज असल्यास पहिल्यांदा  विचारा. शंका नसल्यास कोड तयार करा.

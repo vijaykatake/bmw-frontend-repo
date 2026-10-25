@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aUhlwoE/jbQ=",
+  "dgSpecHash": "Xr51ESrd/e8=",
   "success": true,
   "projectFilePath": "D:\\Working\\BioMedicalWaste\\BMW V01\\Frontend\\Frontend.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\shree\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.32\\microsoft.windowsdesktop.app.ref.8.0.32.nupkg.sha512",
-    "C:\\Users\\shree\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.32\\microsoft.netcore.app.ref.8.0.32.nupkg.sha512",
-    "C:\\Users\\shree\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.32\\microsoft.aspnetcore.app.ref.8.0.32.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }
