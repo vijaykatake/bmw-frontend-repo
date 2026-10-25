@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import { QRCodeSVG } from "qrcode.react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,6 +6,7 @@ import { faCheck, faTrashAlt, faXmark, faExclamationCircle, faEnvelope, faClipbo
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import DataLoadingOverlay from "../../components/DataLoadingOverlay.jsx";
+import { API_BASE_URL } from "../../config/api.js";
 
 const generateUniqueScanCode = () => {
     const timestamp = Date.now();
@@ -88,10 +89,10 @@ const Packaging = ({ settings, profile }) => {
         setLoading(true);
         try {
             const [wardRes, catRes, unitRes, listRes] = await Promise.all([
-                axios.post("/api/wardentry", { TransactionValue: 7 }, { withCredentials: true }),
-                axios.post("/api/wardentry", { TransactionValue: 8 }, { withCredentials: true }),
-                axios.post("/api/wardentry", { TransactionValue: 10 }, { withCredentials: true }),
-                axios.post("/api/wardentry", { TransactionValue: 11 }, { withCredentials: true }),
+                axios.post(`${API_BASE_URL}/api/wardentry`, { TransactionValue: 7 }, { withCredentials: true }).catch(() => ({ data: [] })),
+                axios.post(`${API_BASE_URL}/api/wardentry`, { TransactionValue: 8 }, { withCredentials: true }).catch(() => ({ data: [] })),
+                axios.post(`${API_BASE_URL}/api/wardentry`, { TransactionValue: 10 }, { withCredentials: true }).catch(() => ({ data: [] })),
+                axios.post(`${API_BASE_URL}/api/wardentry`, { TransactionValue: 11 }, { withCredentials: true }),
             ]);
             setWards(Array.isArray(wardRes.data) ? wardRes.data : []);
             setCategories(Array.isArray(catRes.data) ? catRes.data : []);
@@ -234,7 +235,7 @@ const Packaging = ({ settings, profile }) => {
 
         if (catId) {
             try {
-                const res = await axios.post("/api/wardentry", {
+                const res = await axios.post(`${API_BASE_URL}/api/wardentry`, {
                     CategoryId: catId,
                     TransactionValue: 9,
                 }, { withCredentials: true });
@@ -372,7 +373,7 @@ const Packaging = ({ settings, profile }) => {
                 TransactionValue: transactionValue,
             };
 
-            const response = await axios.post("/api/wardentry", payload, { withCredentials: true });
+            const response = await axios.post(`${API_BASE_URL}/api/wardentry`, payload, { withCredentials: true });
             const result = response.data;
 
             await handleTransaction(
@@ -390,12 +391,12 @@ const Packaging = ({ settings, profile }) => {
 
     const handleEdit = async (wardEntryId) => {
         try {
-            const res = await axios.post("/api/wardentry", { WardEntryId: wardEntryId, TransactionValue: 4 }, { withCredentials: true });
+            const res = await axios.post(`${API_BASE_URL}/api/wardentry`, { WardEntryId: wardEntryId, TransactionValue: 4 }, { withCredentials: true });
             const record = res.data;
             if (record) {
                 const catId = record.CategoryId ?? record.categoryId;
                 if (catId) {
-                    const typeRes = await axios.post("/api/wardentry", { CategoryId: Number(catId), TransactionValue: 9 }, { withCredentials: true });
+                    const typeRes = await axios.post(`${API_BASE_URL}/api/wardentry`, { CategoryId: Number(catId), TransactionValue: 9 }, { withCredentials: true });
                     setTypes(Array.isArray(typeRes.data) ? typeRes.data : []);
                 }
                 setFormData({
@@ -425,7 +426,7 @@ const Packaging = ({ settings, profile }) => {
         const recordId = confirmRecord.Action ?? confirmRecord.action;
         setConfirmRecord(null);
         try {
-            const response = await axios.post("/api/wardentry", {
+            const response = await axios.post(`${API_BASE_URL}/api/wardentry`, {
                 WardEntryId: recordId,
                 TransactionValue: 3,
             }, { withCredentials: true });
@@ -1435,7 +1436,7 @@ function ErrorDialog({ message, operation, onClose }) {
         setSending(true);
         setSendMessage("");
         try {
-            const response = await fetch("/api/support/email/error-details", {
+            const response = await fetch(`${API_BASE_URL}/api/support/email/error-details`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

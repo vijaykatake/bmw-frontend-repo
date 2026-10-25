@@ -6,6 +6,7 @@ import { faCheck, faXmark, faExclamationCircle, faEnvelope, faClipboard, faQrcod
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import DataLoadingOverlay from "../../components/DataLoadingOverlay.jsx";
+import { API_BASE_URL } from "../../config/api.js";
 
 const StorageAreaShifting = ({ settings, profile }) => {
     const [entries, setEntries] = useState([]);
@@ -40,9 +41,9 @@ const StorageAreaShifting = ({ settings, profile }) => {
         setLoading(true);
         try {
             const [catRes, areaRes, listRes] = await Promise.all([
-                axios.post("/api/storageareashifting", { TransactionValue: 8 }, { withCredentials: true }).catch(() => ({ data: [] })),
-                axios.post("/api/storageareashifting", { TransactionValue: 12 }, { withCredentials: true }).catch(() => ({ data: [] })),
-                axios.post("/api/storageareashifting", { TransactionValue: 11 }, { withCredentials: true }),
+                axios.post(`${API_BASE_URL}/api/storageareashifting`, { TransactionValue: 8 }, { withCredentials: true }).catch(() => ({ data: [] })),
+                axios.post(`${API_BASE_URL}/api/storageareashifting`, { TransactionValue: 12 }, { withCredentials: true }).catch(() => ({ data: [] })),
+                axios.post(`${API_BASE_URL}/api/storageareashifting`, { TransactionValue: 11 }, { withCredentials: true }),
             ]);
             setCategories(Array.isArray(catRes.data) ? catRes.data : []);
             setStorageAreas(Array.isArray(areaRes.data) ? areaRes.data : []);
@@ -81,7 +82,7 @@ const StorageAreaShifting = ({ settings, profile }) => {
                 TransactionValue: 13,
             };
 
-            const response = await axios.post("/api/storageareashifting", payload, { withCredentials: true });
+            const response = await axios.post(`${API_BASE_URL}/api/storageareashifting`, payload, { withCredentials: true });
             const result = response.data;
             const resultId = Number(result?.ResultID ?? result?.resultID ?? result?.resultId ?? 0);
 
@@ -807,7 +808,7 @@ function ErrorDialog({ message, operation, onClose }) {
         setSending(true);
         setSendMessage("");
         try {
-            const response = await fetch("/api/support/email/error-details", {
+            const response = await fetch(`${API_BASE_URL}/api/support/email/error-details`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },

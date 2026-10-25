@@ -6,6 +6,7 @@ import { faCheck, faXmark, faExclamationCircle, faEnvelope, faClipboard, faQrcod
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import DataLoadingOverlay from "../../components/DataLoadingOverlay.jsx";
+import { API_BASE_URL } from "../../config/api.js";
 
 const WardInChargeApproval = ({ settings, profile }) => {
     const [entries, setEntries] = useState([]);
@@ -35,8 +36,8 @@ const WardInChargeApproval = ({ settings, profile }) => {
         setLoading(true);
         try {
             const [catRes, listRes] = await Promise.all([
-                axios.post("/api/wardinchargeapproval", { TransactionValue: 8 }, { withCredentials: true }).catch(() => ({ data: [] })),
-                axios.post("/api/wardinchargeapproval", { TransactionValue: 11 }, { withCredentials: true }),
+                axios.post(`${API_BASE_URL}/api/wardinchargeapproval`, { TransactionValue: 8 }, { withCredentials: true }).catch(() => ({ data: [] })),
+                axios.post(`${API_BASE_URL}/api/wardinchargeapproval`, { TransactionValue: 11 }, { withCredentials: true }),
             ]);
             setCategories(Array.isArray(catRes.data) ? catRes.data : []);
             setEntries(Array.isArray(listRes.data) ? listRes.data : []);
@@ -63,7 +64,7 @@ const WardInChargeApproval = ({ settings, profile }) => {
                 TransactionValue: 6,
             };
 
-            const response = await axios.post("/api/wardinchargeapproval", payload, { withCredentials: true });
+            const response = await axios.post(`${API_BASE_URL}/api/wardinchargeapproval`, payload, { withCredentials: true });
             const result = response.data;
             const resultId = Number(result?.ResultID ?? result?.resultID ?? result?.resultId ?? 0);
 
@@ -673,7 +674,7 @@ function ErrorDialog({ message, operation, onClose }) {
         setSending(true);
         setSendMessage("");
         try {
-            const response = await fetch("/api/support/email/error-details", {
+            const response = await fetch(`${API_BASE_URL}/api/support/email/error-details`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
