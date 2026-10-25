@@ -348,7 +348,7 @@ Begin -- Procedure Start
 		 -- 12. List Of Storage Area For Temporary Area Shifting Action.
 		 IF(@BMWTransValue = 12)
 		 Begin
-			SELECT 0 AS [StorageAreaId], 'Select Storage Area ... ' AS [StorageAreaName], '' AS [StorageAreaDescription] UNION SELECT [StorageAreaId], [StorageAreaName], [StorageAreaDescription] FROM [BioMedicalWaste].[BMWMaster].[StorageArea] Where [IsStorageAreaActive] = 'true' And [IsStorageAreaDeleted] = 'false' Order By [StorageAreaId];
+			SELECT 0 AS [StorageAreaId], 'Select Storage Area ... ' AS [StorageAreaName], '' AS [StorageAreaDescription] UNION SELECT [StorageAreaId], [StorageAreaName], [StorageAreaDescription] FROM [BMWMaster].[StorageArea] Where [IsStorageAreaActive] = 'true' And [IsStorageAreaDeleted] = 'false' Order By [StorageAreaId];
 		 End
 		 -- 13. For Temporary Area Shifting Action.
 		 IF(@BMWTransValue = 13)
