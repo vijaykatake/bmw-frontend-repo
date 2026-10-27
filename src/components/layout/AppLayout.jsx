@@ -15,6 +15,7 @@ import SupportSettings from "../../Settings/SupportSettings/SupportSettings.jsx"
 import Packaging from "../../Transaction/Ward/Packaging.jsx";
 import WardInChargeApproval from "../../Transaction/Ward/WardInChargeApproval.jsx";
 import StorageAreaShifting from "../../Transaction/Ward/StorageAreaShifting.jsx";
+import WardCollectionVerification from "../../Transaction/BMW Handler/WardCollectionVerification.jsx";
 
 export default function AppLayout({ user, layout, onLogout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -65,6 +66,8 @@ export default function AppLayout({ user, layout, onLogout }) {
         <WardInChargeApproval settings={layout.settings} profile={layout.profile} />
     ) : path === "/ward/storageareashifting" || path === "/frontend/ward/storageareashifting" ? (
         <StorageAreaShifting settings={layout.settings} profile={layout.profile} />
+     ) : path === "/bmwhandler/wardcollectionverification" ? (
+        <WardCollectionVerification settings={layout.settings} profile={layout.profile} />
     ) : path === "/profile" ? (
       <Profile profile={layout.profile} />
     ) : path === "/change-password" ? (

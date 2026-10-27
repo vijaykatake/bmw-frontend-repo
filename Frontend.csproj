@@ -17,5 +17,6 @@
 
   <ItemGroup>
     <Folder Include="public\assets\images\profile\" />
+    <Folder Include="src\Transaction\BMW Handler\" />
   </ItemGroup>
 </Project>

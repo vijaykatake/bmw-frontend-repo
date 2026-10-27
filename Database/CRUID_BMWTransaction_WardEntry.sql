@@ -379,6 +379,34 @@ Begin -- Procedure Start
 		     Exec [BMWArchitecture].[ExecuteMessage] 'Approval', '5071', @ReplaceDesc; 
 		     RETURN; 
 		 End
+		 -- 14. For Verify And Collect.
+		 IF(@BMWTransValue = 14)
+		 Begin
+             -- Fetch details for confirmation message display
+             Select @ReplaceDesc = CONCAT(
+                 ISNULL(w.WardName, 'Ward'), ' - ',
+                 ISNULL(c.WasteCategoryName, 'Category'), ' - ',
+                 ISNULL(t.WasteTypeName, 'Type'), ' - ',
+                 CAST(ISNULL(main.Volume, 0) AS VARCHAR(20)), ' ',
+                 ISNULL(u.Short, '')
+             )
+             From [BMWTransaction].[WardEntry] main
+             Left Join [BMWMaster].[Ward] w On w.WardId = main.WardId
+             Left Join [BMWMaster].[WasteCategory] c On c.WasteCategoryId = main.CategoryId
+             Left Join [BMWMaster].[WasteType] t On t.WasteTypeId = main.TypeID
+             Left Join [BMWMaster].[Unit] u On u.UnitId = main.UnitID
+             Where main.WardEntryId = @BMWWardEntryId;
+
+		     Update [BMWTransaction].[WardEntry] 
+		     Set [CollectionRemark] = @BMWCollectionRemark,
+				 [StatusID] = 10,
+				 [CollectedAndVarifiedBy] = @BMWTransUserID, 
+		         [CollectedAndVarifiedDate] = GETDATE()
+		     Where [WardEntryId] = @BMWWardEntryId; 
+
+		     Exec [BMWArchitecture].[ExecuteMessage] 'Approval', '5072', @ReplaceDesc; 
+		     RETURN; 
+		 End
 	END TRY -- Try Catch Block End
 	BEGIN CATCH  -- Begin Catch Block Start
 		Insert InTo [BMWLog].[SQLLog] ([DML], [ERROR_SEVERITY], [ERROR_STATE], [ERROR_PROCEDURE], [ERROR_LINE], [ERROR_MESSAGE])  
